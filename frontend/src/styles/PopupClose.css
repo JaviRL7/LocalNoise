@@ -1,0 +1,41 @@
+/* Estilos para el botón de cerrar del popup - SEPARADO DEL BORDE */
+.leaflet-popup-close-button {
+  position: absolute !important;
+  top: 16px !important;
+  right: 18px !important;
+  width: 36px !important;
+  height: 36px !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10000 !important;
+  transition: all 0.2s ease !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+}
+
+.leaflet-popup-close-button span {
+  color: white !important;
+  font-size: 26px !important;
+  font-weight: 300 !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: -2px !important;
+}
+
+.leaflet-popup-close-button:hover {
+  background: rgba(29, 185, 84, 0.9) !important;
+  transform: scale(1.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.leaflet-popup-close-button:active {
+  transform: scale(0.95) !important;
+}

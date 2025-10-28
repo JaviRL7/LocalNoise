@@ -1,0 +1,338 @@
+/* POPUP PRINCIPAL - Estilo Spotify */
+.band-popup {
+  min-width: 420px;
+  max-width: 480px;
+  font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background: #121212;
+  color: white;
+  overflow: hidden;
+  border-radius: 12px;
+  border: none;
+}
+
+/* Bordes redondeados del contenedor del popup de Leaflet */
+.leaflet-popup-content-wrapper {
+  background: #121212;
+  border-radius: 12px;
+  border: none;
+  padding: 0;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+.leaflet-popup-content {
+  margin: 0;
+  padding: 0;
+}
+
+.leaflet-popup-tip {
+  background: #121212;
+  border: none;
+  box-shadow: none;
+}
+
+/* HEADER CUADRADO CON IMAGEN DE FONDO - Estilo Spotify */
+.spotify-header {
+  width: 100%;
+  padding-top: 100%; /* Mantiene aspecto cuadrado */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-radius: 12px 12px 0 0; /* Bordes redondeados arriba */
+}
+
+.header-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+}
+
+.band-name {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+.band-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.location {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+.genre {
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+}
+
+.genre::before {
+  content: "•";
+  margin-right: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.verified {
+  background: #1DB954;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* REPRODUCTOR PEQUEÑO - Estilo Spotify */
+.player-section {
+  background: #181818;
+  padding: 8px 0;
+}
+
+.loading,
+.no-tracks {
+  text-align: center;
+  padding: 20px;
+  color: #b3b3b3;
+  font-size: 0.875rem;
+}
+
+.mini-player {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+/* Scrollbar personalizado estilo Spotify */
+.mini-player::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mini-player::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+.mini-player::-webkit-scrollbar-thumb {
+  background: #282828;
+  border-radius: 4px;
+}
+
+.mini-player::-webkit-scrollbar-thumb:hover {
+  background: #3e3e3e;
+}
+
+/* FILA DE TRACK - Estilo Spotify */
+.track-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 4px;
+  margin: 0 8px;
+}
+
+.track-row:hover {
+  background: #282828;
+}
+
+.track-row.active {
+  background: #282828;
+}
+
+.track-row.active .track-title-mini {
+  color: #1DB954;
+}
+
+.track-number-col {
+  font-size: 0.875rem;
+  color: #b3b3b3;
+  text-align: center;
+  font-weight: 500;
+}
+
+.track-row.active .track-number-col {
+  color: #1DB954;
+}
+
+.track-info-col {
+  overflow: hidden;
+}
+
+.track-title-mini {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-play-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b3b3b3;
+}
+
+.track-row:hover .track-play-col,
+.track-row.active .track-play-col {
+  color: #1DB954;
+}
+
+.track-audio-hidden {
+  display: none;
+}
+
+/* CONTRIBUTOR */
+.popup-contributor {
+  font-size: 0.7rem;
+  color: #6a6a6a;
+  margin: 0;
+  padding: 10px 16px 12px 16px;
+  background: #0a0a0a;
+  border-top: 1px solid #1a1a1a;
+  text-align: center;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.popup-contributor strong {
+  color: #b3b3b3;
+  font-weight: 600;
+}
+
+/* BAND ACTIONS (Edit/Delete) */
+.band-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #121212;
+  border-top: 1px solid #282828;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 40px;
+  height: 40px;
+}
+
+.edit-button {
+  background: #535353;
+  color: white;
+}
+
+.edit-button:hover {
+  background: #727272;
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.delete-button {
+  background: #e22134;
+  color: white;
+}
+
+.delete-button:hover {
+  background: #c41e31;
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(226, 33, 52, 0.4);
+}
+
+.action-button svg {
+  flex-shrink: 0;
+}
+
+/* ENLACES */
+.popup-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 16px 16px 16px;
+  background: #121212;
+}
+
+.popup-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spotify-link {
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+  color: white;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(29, 185, 84, 0.4);
+  transition: all 0.3s ease;
+}
+
+.spotify-link svg {
+  flex-shrink: 0;
+}
+
+.spotify-link:hover {
+  background: linear-gradient(135deg, #1ed760 0%, #1fdf64 100%);
+  transform: scale(1.02) translateY(-1px);
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.5);
+}
+
+.youtube-link {
+  background: #FF0000;
+  color: white;
+}
+
+.youtube-link:hover {
+  background: #cc0000;
+  transform: scale(1.05);
+}
+
+.website-link {
+  background: #535353;
+  color: white;
+}
+
+.website-link:hover {
+  background: #727272;
+  transform: scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (max-width: 480px) {
+  .band-name {
+    font-size: 1.5rem;
+  }
+
+  .header-overlay {
+    padding: 16px;
+  }
+}

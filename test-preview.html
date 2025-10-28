@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Spotify Preview</title>
+</head>
+<body>
+    <h1>Test de Preview de Spotify</h1>
+    <div id="result"></div>
+    <audio id="player" controls style="width: 100%; margin-top: 20px;"></audio>
+
+    <script>
+        async function testSpotify() {
+            const resultDiv = document.getElementById('result');
+            const player = document.getElementById('player');
+
+            try {
+                // Buscar Arctic Monkeys (suelen tener previews)
+                const searchRes = await fetch('http://localhost:5000/api/spotify/search?q=Arctic%20Monkeys&limit=1');
+                const searchData = await searchRes.json();
+
+                if (searchData.artists && searchData.artists.length > 0) {
+                    const artist = searchData.artists[0];
+                    resultDiv.innerHTML += `<p><strong>Artista:</strong> ${artist.name} (${artist.id})</p>`;
+
+                    // Obtener top tracks
+                    const tracksRes = await fetch(`http://localhost:5000/api/spotify/artists/${artist.id}/top-tracks?market=US`);
+                    const tracksData = await tracksRes.json();
+
+                    resultDiv.innerHTML += '<h2>Top Tracks:</h2><ul>';
+
+                    tracksData.tracks.forEach((track, i) => {
+                        const hasPreview = track.previewUrl ? 'SÍ ✅' : 'NO ❌';
+                        resultDiv.innerHTML += `<li>${track.name} - Preview: ${hasPreview}</li>`;
+
+                        // Usar el primer preview disponible
+                        if (track.previewUrl && !player.src) {
+                            player.src = track.previewUrl;
+                            resultDiv.innerHTML += `<p style="color: green;">✅ Preview encontrado! Reproductor cargado.</p>`;
+                        }
+                    });
+
+                    resultDiv.innerHTML += '</ul>';
+
+                    if (!player.src) {
+                        resultDiv.innerHTML += '<p style="color: red;">⚠️ No se encontraron previews disponibles para esta banda.</p>';
+                    }
+                } else {
+                    resultDiv.innerHTML = '<p>No se encontró el artista</p>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                console.error(error);
+            }
+        }
+
+        testSpotify();
+    </script>
+</body>
+</html>
