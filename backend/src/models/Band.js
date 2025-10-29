@@ -89,6 +89,10 @@ const Band = sequelize.define('Band', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  twitterUrl: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   isActive: {
     type: DataTypes.BOOLEAN,
     defaultValue: true,

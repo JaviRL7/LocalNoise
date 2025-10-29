@@ -93,6 +93,11 @@
   margin-bottom: 20px;
 }
 
+/* Margen extra para el primer campo después del buscador de Spotify */
+.spotify-search + .form-group {
+  margin-top: 24px;
+}
+
 .form-group label {
   display: block;
   margin-bottom: 12px;
@@ -280,6 +285,60 @@
   margin-bottom: 20px;
   font-size: 14px;
   border-left: 4px solid #e22134;
+}
+
+/* Sección de redes sociales */
+.social-media-section {
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(29, 185, 84, 0.05);
+  border: 1px dashed rgba(29, 185, 84, 0.3);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.add-social-button {
+  width: 100%;
+  padding: 12px 20px;
+  background: transparent;
+  border: 1px solid #535353;
+  border-radius: 8px;
+  color: #b3b3b3;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.add-social-button:hover {
+  background: #282828;
+  border-color: #1DB954;
+  color: #1DB954;
+  transform: scale(1.01);
+}
+
+.add-social-button svg {
+  flex-shrink: 0;
+}
+
+.social-media-added {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #1DB954;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.social-media-added svg {
+  flex-shrink: 0;
 }
 
 .form-actions {

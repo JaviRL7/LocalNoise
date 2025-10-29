@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const deezerController = require('../controllers/deezerController');
 
+// Sistema híbrido optimizado (Spotify + Deezer)
+router.get('/hybrid/tracks', deezerController.getHybridTracks);
+
 // Buscar artista
 router.get('/search/artist', deezerController.searchArtist);
 

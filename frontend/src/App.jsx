@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Server, Database, Sparkles, Heart, ChevronDown } from 'lucide-react';
 import Map from './components/Map';
 import AddBandForm from './components/AddBandForm';
 import OnboardingModal from './components/OnboardingModal';
+import ConfirmModal from './components/ConfirmModal';
 import { bandService, authService } from './services/api';
 import { translations } from './translations';
 import './styles/App.css';
@@ -20,6 +22,26 @@ function App() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [userBands, setUserBands] = useState([]);
   const [language, setLanguage] = useState('es');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [initialCoordinates, setInitialCoordinates] = useState(null);
+  const [clickToAddMode, setClickToAddMode] = useState(false);
+  const [pendingLocation, setPendingLocation] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [bandToDelete, setBandToDelete] = useState(null);
+  const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showMobileMenu && !e.target.closest('.header-actions') && !e.target.closest('.hamburger-menu')) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showMobileMenu]);
 
   // Cargar bandas al iniciar
   useEffect(() => {
@@ -150,27 +172,92 @@ function App() {
       setAuthMode('login');
     } else {
       setSelectedBand(null);
+      setInitialCoordinates(null);
       setShowAddForm(true);
+    }
+  };
+
+  const handleMapClick = async (latlng) => {
+    if (!clickToAddMode) return;
+
+    // Hacer geocodificación inversa para obtener ciudad y país
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`
+      );
+      const data = await response.json();
+
+      const city = data.address?.city || data.address?.town || data.address?.village || data.address?.county || '';
+      const country = data.address?.country || '';
+
+      setPendingLocation({
+        latitude: latlng.lat.toFixed(6),
+        longitude: latlng.lng.toFixed(6),
+        city: city,
+        country: country
+      });
+    } catch (error) {
+      console.error('Error en geocodificación inversa:', error);
+      // Si falla, simplemente usar las coordenadas
+      setPendingLocation({
+        latitude: latlng.lat.toFixed(6),
+        longitude: latlng.lng.toFixed(6),
+        city: '',
+        country: ''
+      });
+    }
+  };
+
+  const handleConfirmLocation = () => {
+    setInitialCoordinates(pendingLocation);
+    setPendingLocation(null);
+    setClickToAddMode(false);
+    setSelectedBand(null);
+    setShowAddForm(true);
+  };
+
+  const handleCancelLocation = () => {
+    setPendingLocation(null);
+    setClickToAddMode(false);
+  };
+
+  const toggleClickToAddMode = () => {
+    if (!user) {
+      setShowAuth(true);
+      setAuthMode('login');
+    } else {
+      setClickToAddMode(!clickToAddMode);
+      if (clickToAddMode) {
+        setPendingLocation(null);
+      }
     }
   };
 
   const handleEditBand = (band) => {
     setSelectedBand(band);
+    setInitialCoordinates(null);
     setShowAddForm(true);
   };
 
-  const handleDeleteBand = async (bandId) => {
-    if (!window.confirm('¿Estás seguro de que quieres eliminar esta banda?')) {
-      return;
-    }
+  const handleDeleteBand = (bandId) => {
+    setBandToDelete(bandId);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDeleteBand = async () => {
+    if (!bandToDelete) return;
 
     try {
-      await bandService.delete(bandId);
-      setBands(bands.filter(b => b.id !== bandId));
+      await bandService.delete(bandToDelete);
+      setBands(bands.filter(b => b.id !== bandToDelete));
       setSelectedBand(null);
+      setShowDeleteConfirm(false);
+      setBandToDelete(null);
     } catch (err) {
       console.error('Error al eliminar banda:', err);
       alert(err.response?.data?.error || 'Error al eliminar la banda');
+      setShowDeleteConfirm(false);
+      setBandToDelete(null);
     }
   };
 
@@ -178,10 +265,26 @@ function App() {
     setLanguage(language === 'es' ? 'en' : 'es');
   };
 
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    setShowLanguageMenu(false);
+  };
+
+  const languageOptions = [
+    { code: 'es', name: 'Español', flagCode: 'es' },
+    { code: 'en', name: 'English', flagCode: 'gb' },
+    { code: 'fr', name: 'Français', flagCode: 'fr' },
+    { code: 'it', name: 'Italiano', flagCode: 'it' },
+    { code: 'ja', name: '日本語', flagCode: 'jp' },
+    { code: 'ko', name: '한국어', flagCode: 'kr' }
+  ];
+
+  const currentLanguage = languageOptions.find(l => l.code === language);
+
   const t = translations[language];
 
   if (loading) {
-    return <div className="loading">Cargando mapa...</div>;
+    return <div className="loading">{t.loading}</div>;
   }
 
   return (
@@ -194,27 +297,92 @@ function App() {
               <span className="logo-subtitle">{t.subtitle}</span>
             </div>
           </div>
-          <div className="header-actions">
+
+          {/* Hamburger Menu Button */}
+          <button
+            className="hamburger-menu"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            aria-label="Menu"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {showMobileMenu ? (
+                <>
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="12" x2="21" y2="12"></line>
+                  <line x1="3" y1="6" x2="21" y2="6"></line>
+                  <line x1="3" y1="18" x2="21" y2="18"></line>
+                </>
+              )}
+            </svg>
+          </button>
+
+          <div className={`header-actions ${showMobileMenu ? 'mobile-open' : ''}`}>
+            <a
+              href="https://ko-fi.com/javi_r0dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="kofi-button-header"
+              title="Support LocalNoise"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
+              </svg>
+              Ko-fi
+            </a>
             <button
-              onClick={() => setShowOnboarding(true)}
+              onClick={() => { setShowOnboarding(true); setShowMobileMenu(false); }}
               className="info-button"
-              title="Ver tutorial"
+              title={t.header.tutorialButton}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
               </svg>
             </button>
+            <div className="language-menu-container">
+              <button
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                className="language-toggle"
+                title={currentLanguage?.name}
+              >
+                <img
+                  src={`https://flagcdn.com/w40/${currentLanguage?.flagCode}.png`}
+                  alt={currentLanguage?.name}
+                  className="flag-icon"
+                />
+              </button>
+
+              {showLanguageMenu && (
+                <div className="language-dropdown-menu">
+                  {languageOptions.map(lang => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code)}
+                      className={`language-option ${language === lang.code ? 'active' : ''}`}
+                    >
+                      <img
+                        src={`https://flagcdn.com/w40/${lang.flagCode}.png`}
+                        alt={lang.name}
+                        className="flag-icon-dropdown"
+                      />
+                      <span className="language-name">{lang.name}</span>
+                      {language === lang.code && (
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <button
-              onClick={toggleLanguage}
-              className="language-toggle"
-              title="Change language"
-            >
-              🌐 {language === 'es' ? 'EN' : 'ES'}
-            </button>
-            <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={() => { setDarkMode(!darkMode); setShowMobileMenu(false); }}
               className="theme-toggle"
-              title={darkMode ? "Modo día" : "Modo nocturno"}
+              title={darkMode ? t.header.lightMode : t.header.darkMode}
             >
               {darkMode ? 'Light' : 'Dark'}
             </button>
@@ -247,11 +415,11 @@ function App() {
                 {showUserMenu && (
                   <div className="user-dropdown-menu">
                     <div className="user-menu-header">
-                      <h3>Mis Bandas ({userBands.length})</h3>
+                      <h3>{t.header.myBands} ({userBands.length})</h3>
                     </div>
                     <div className="user-bands-list">
                       {userBands.length === 0 ? (
-                        <p className="no-bands-message">No has agregado ninguna banda aún</p>
+                        <p className="no-bands-message">{t.header.noBands}</p>
                       ) : (
                         userBands.map(band => (
                           <div key={band.id} className="user-band-item">
@@ -285,15 +453,15 @@ function App() {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
                         </svg>
-                        Cerrar sesión
+                        {t.header.logout}
                       </button>
                     </div>
                   </div>
                 )}
               </div>
             ) : (
-              <button onClick={() => { setShowAuth(true); setAuthMode('login'); }} className="login-button">
-                Iniciar sesión
+              <button onClick={() => { setShowAuth(true); setAuthMode('login'); setShowMobileMenu(false); }} className="login-button">
+                {t.header.login}
               </button>
             )}
           </div>
@@ -304,6 +472,7 @@ function App() {
         <Map
           bands={bands}
           onBandClick={setSelectedBand}
+          onMapClick={handleMapClick}
           selectedBand={selectedBand}
           darkMode={darkMode}
           user={user}
@@ -311,17 +480,97 @@ function App() {
           onShowAuth={() => { setShowAuth(true); setAuthMode('login'); }}
           onEditBand={handleEditBand}
           onDeleteBand={handleDeleteBand}
+          translations={t.map}
+          bandPopupTranslations={t.bandPopup}
+          clickToAddMode={clickToAddMode}
+          onToggleClickToAdd={toggleClickToAddMode}
         />
 
         <div className="info-panel-overlay">
-          <h2>Información</h2>
-          <p>Total de bandas: <strong>{bands.length}</strong></p>
-          <p>Países representados: <strong>{new Set(bands.map(b => b.country)).size}</strong></p>
+          <h2>{t.info.title}</h2>
+          <p>{t.info.totalBands} <strong>{bands.length}</strong></p>
+          <p>{t.info.countriesRepresented} <strong>{new Set(bands.map(b => b.country)).size}</strong></p>
 
           {!user && (
             <div className="info-message">
-              <p>Inicia sesión para agregar bandas de tu escena local</p>
+              <p>{t.info.loginPrompt}</p>
             </div>
+          )}
+
+          {/* Ko-fi Goals Section - Collapsible */}
+          <div
+            className="kofi-goals-header"
+            onClick={() => setInfoPanelCollapsed(!infoPanelCollapsed)}
+            title={t.kofiGoals?.collapseHint || 'Click to collapse'}
+          >
+            <h3 className="kofi-goals-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '6px' }}>
+                <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
+              </svg>
+              {t.kofiGoals?.title || 'Project Goals'}
+            </h3>
+            <ChevronDown
+              size={20}
+              style={{
+                transform: infoPanelCollapsed ? 'rotate(-90deg)' : 'rotate(0deg)',
+                transition: 'transform 0.3s ease'
+              }}
+            />
+          </div>
+
+          {!infoPanelCollapsed && (
+          <>
+            <div className="kofi-goal">
+              <div className="goal-header">
+                <span className="goal-name">
+                  <Server size={16} className="goal-icon" />
+                  {t.kofiGoals?.goal1.name || 'Hosting & Domain'}
+                </span>
+                <span className="goal-amount">€{t.kofiGoals?.goal1.amount || '10'}</span>
+              </div>
+              <div className="goal-progress-bar">
+                <div className="goal-progress-fill" style={{ width: '0%' }}></div>
+              </div>
+              <p className="goal-description">{t.kofiGoals?.goal1.description || 'Server and custom domain for LocalNoise'}</p>
+            </div>
+            <div className="kofi-goal">
+              <div className="goal-header">
+                <span className="goal-name">
+                  <Database size={16} className="goal-icon" />
+                  {t.kofiGoals?.goal2.name || 'Database'}
+                </span>
+                <span className="goal-amount">€{t.kofiGoals?.goal2.amount || '25'}</span>
+              </div>
+              <div className="goal-progress-bar">
+                <div className="goal-progress-fill" style={{ width: '0%' }}></div>
+              </div>
+              <p className="goal-description">{t.kofiGoals?.goal2.description || 'Premium plan to scale the database'}</p>
+            </div>
+            <div className="kofi-goal">
+              <div className="goal-header">
+                <span className="goal-name">
+                  <Sparkles size={16} className="goal-icon" />
+                  {t.kofiGoals?.goal3.name || 'New Features'}
+                </span>
+                <span className="goal-amount">€{t.kofiGoals?.goal3.amount || '50'}</span>
+              </div>
+              <div className="goal-progress-bar">
+                <div className="goal-progress-fill" style={{ width: '0%' }}></div>
+              </div>
+              <p className="goal-description">{t.kofiGoals?.goal3.description || 'Development of new functionalities'}</p>
+            </div>
+            <a
+              href="https://ko-fi.com/javi_r0dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="kofi-support-link"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
+              </svg>
+              {t.kofiGoals?.supportButton || 'Support LocalNoise'}
+            </a>
+          </>
           )}
         </div>
       </main>
@@ -329,12 +578,15 @@ function App() {
       {showAddForm && (
         <AddBandForm
           band={selectedBand}
+          initialCoordinates={initialCoordinates}
           onBandAdded={handleBandAdded}
           onBandUpdated={handleBandUpdated}
           onClose={() => {
             setShowAddForm(false);
             setSelectedBand(null);
+            setInitialCoordinates(null);
           }}
+          translations={t.bandForm}
         />
       )}
 
@@ -342,7 +594,7 @@ function App() {
         <div className="modal-overlay">
           <div className="modal-content auth-modal">
             <div className="modal-header">
-              <h2>{authMode === 'login' ? 'Iniciar sesión' : 'Registrarse'}</h2>
+              <h2>{authMode === 'login' ? t.auth.login : t.auth.register}</h2>
               <button onClick={() => setShowAuth(false)} className="close-button">&times;</button>
             </div>
 
@@ -358,24 +610,24 @@ function App() {
                       <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.348 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
                       <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/>
                     </svg>
-                    Continuar con Google
+                    {t.auth.continueWithGoogle}
                   </button>
 
                   <div className="auth-divider">
-                    <span>o</span>
+                    <span>{t.auth.or}</span>
                   </div>
 
                   <div className="form-group">
-                    <label>Email</label>
+                    <label>{t.auth.email}</label>
                     <input type="email" name="email" required />
                   </div>
                   <div className="form-group">
-                    <label>Contraseña</label>
+                    <label>{t.auth.password}</label>
                     <input type="password" name="password" required />
                   </div>
-                  <button type="submit" className="submit-button">Iniciar sesión</button>
+                  <button type="submit" className="submit-button">{t.auth.loginButton}</button>
                   <p className="auth-switch">
-                    ¿No tienes cuenta? <button type="button" onClick={() => { setAuthMode('register'); setError(''); }}>Regístrate</button>
+                    {t.auth.noAccount} <button type="button" onClick={() => { setAuthMode('register'); setError(''); }}>{t.auth.registerButton}</button>
                   </p>
                 </form>
               ) : (
@@ -387,36 +639,36 @@ function App() {
                       <path fill="#FBBC05" d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.348 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z"/>
                       <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z"/>
                     </svg>
-                    Continuar con Google
+                    {t.auth.continueWithGoogle}
                   </button>
 
                   <div className="auth-divider">
-                    <span>o</span>
+                    <span>{t.auth.or}</span>
                   </div>
 
                   <div className="form-group">
-                    <label>Nombre de usuario</label>
+                    <label>{t.auth.username}</label>
                     <input type="text" name="username" required />
                   </div>
                   <div className="form-group">
-                    <label>Email</label>
+                    <label>{t.auth.email}</label>
                     <input type="email" name="email" required />
                   </div>
                   <div className="form-group">
-                    <label>Contraseña</label>
+                    <label>{t.auth.password}</label>
                     <input type="password" name="password" required />
                   </div>
                   <div className="form-group">
-                    <label>Ciudad</label>
+                    <label>{t.auth.city}</label>
                     <input type="text" name="city" />
                   </div>
                   <div className="form-group">
-                    <label>País</label>
+                    <label>{t.auth.country}</label>
                     <input type="text" name="country" />
                   </div>
-                  <button type="submit" className="submit-button">Registrarse</button>
+                  <button type="submit" className="submit-button">{t.auth.registerButton}</button>
                   <p className="auth-switch">
-                    ¿Ya tienes cuenta? <button type="button" onClick={() => { setAuthMode('login'); setError(''); }}>Inicia sesión</button>
+                    {t.auth.hasAccount} <button type="button" onClick={() => { setAuthMode('login'); setError(''); }}>{t.auth.loginButton}</button>
                   </p>
                 </form>
               )}
@@ -431,6 +683,103 @@ function App() {
           translations={t.onboarding}
         />
       )}
+
+      {showDeleteConfirm && (
+        <ConfirmModal
+          isOpen={showDeleteConfirm}
+          onClose={() => {
+            setShowDeleteConfirm(false);
+            setBandToDelete(null);
+          }}
+          onConfirm={confirmDeleteBand}
+          title={t.deleteConfirm?.title || '¿Eliminar banda?'}
+          message={t.deleteConfirm?.message || '¿Estás seguro de que quieres eliminar esta banda? Esta acción no se puede deshacer.'}
+          confirmText={t.deleteConfirm?.confirm || 'Eliminar'}
+          cancelText={t.deleteConfirm?.cancel || 'Cancelar'}
+        />
+      )}
+
+      {pendingLocation && (
+        <div className="modal-overlay">
+          <div className="modal-content confirm-location-modal">
+            <div className="modal-header">
+              <h2>¿Agregar banda aquí?</h2>
+              <button onClick={handleCancelLocation} className="close-button">&times;</button>
+            </div>
+            <div className="confirm-location-content">
+              <p className="location-info">
+                <strong>Ubicación detectada</strong>
+                {pendingLocation.city || 'Sin nombre'}, {pendingLocation.country || 'Desconocido'}
+              </p>
+              <p className="coordinates-info">
+                <strong>Coordenadas</strong>
+                {pendingLocation.latitude}, {pendingLocation.longitude}
+              </p>
+              <p className="instruction-text">
+                Confirma esta ubicación para abrir el buscador de Spotify y agregar una banda en este punto del mapa.
+              </p>
+            </div>
+            <div className="form-actions">
+              <button onClick={handleCancelLocation} className="cancel-button">
+                Cancelar
+              </button>
+              <button onClick={handleConfirmLocation} className="submit-button">
+                Confirmar ubicación
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className="app-footer">
+        <div className="footer-content">
+          <div className="footer-left">
+            <p>
+              <strong>LocalNoise</strong>
+            </p>
+            <span className="separator" style={{ color: '#535353' }}>•</span>
+            <div className="powered-by-section">
+              <span className="powered-by-text">Powered by</span>
+              <span className="service-text spotify-text">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                </svg>
+                Spotify
+              </span>
+              <span className="separator" style={{ color: '#535353' }}>+</span>
+              <span className="service-text deezer-text">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Deezer_New_Icon.svg"
+                  alt="Deezer"
+                  width="16"
+                  height="16"
+                  className="deezer-icon"
+                />
+                Deezer
+              </span>
+            </div>
+          </div>
+          <p className="footer-copy">
+            © 2025 - Made with <Heart size={12} fill="#FF5E5B" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 2px' }} /> for local music
+          </p>
+          <div className="footer-links">
+            <a href="https://github.com/JaviRL7" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              GitHub
+            </a>
+            <span className="separator">•</span>
+            <a href="https://www.linkedin.com/in/javier-rodriguez-lopez-4795a8180/" target="_blank" rel="noopener noreferrer">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -69,6 +69,10 @@ export const deezerService = {
   }),
   getTopTracks: (artistId, limit = 5) => api.get(`/deezer/artists/${artistId}/top-tracks`, {
     params: { limit }
+  }),
+  // Sistema híbrido optimizado (Spotify + Deezer)
+  getHybridTracks: (bandName, spotifyId, limit = 5) => api.get('/deezer/hybrid/tracks', {
+    params: { bandName, spotifyId, limit }
   })
 };
 

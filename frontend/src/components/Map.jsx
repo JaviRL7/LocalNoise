@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import { createRoot } from 'react-dom/client';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -29,8 +29,45 @@ const bandIcon = new L.Icon({
   shadowAnchor: [12, 41]
 });
 
-function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onAddBandClick, onShowAuth, onEditBand, onDeleteBand }) {
+// Componente para capturar clicks en el mapa
+function MapClickHandler({ onMapClick, user, onShowAuth, clickToAddMode, onToggleClickToAdd }) {
+  useMapEvents({
+    click: (e) => {
+      if (!clickToAddMode) return;
+
+      if (!user) {
+        onShowAuth();
+        return;
+      }
+      // Llamar al handler con las coordenadas del click
+      onMapClick(e.latlng);
+    },
+    contextmenu: (e) => {
+      // Cancelar con click derecho
+      if (clickToAddMode) {
+        e.originalEvent.preventDefault();
+        onToggleClickToAdd();
+      }
+    }
+  });
+  return null;
+}
+
+function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onAddBandClick, onShowAuth, onEditBand, onDeleteBand, translations, bandPopupTranslations, clickToAddMode, onToggleClickToAdd }) {
   const [position] = useState([28.0, 0.0]); // Centro inicial del mapa
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+
+  // Track cursor position for custom cursor
+  useEffect(() => {
+    if (!clickToAddMode) return;
+
+    const handleMouseMove = (e) => {
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [clickToAddMode]);
 
   const handleAddClick = () => {
     if (!user) {
@@ -40,8 +77,43 @@ function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onA
     }
   };
 
+  const handleClickToAddToggle = () => {
+    if (!user) {
+      onShowAuth();
+    } else {
+      onToggleClickToAdd();
+    }
+  };
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      {/* Overlay oscuro cuando está en modo agregar banda */}
+      {clickToAddMode && (
+        <div className="map-overlay-dark" />
+      )}
+
+      {/* Custom cursor for add band mode */}
+      {clickToAddMode && (
+        <div
+          className="custom-map-cursor"
+          style={{
+            position: 'fixed',
+            left: `${cursorPosition.x}px`,
+            top: `${cursorPosition.y}px`,
+            pointerEvents: 'none',
+            zIndex: 9999,
+            transform: 'translate(-50%, -100%)',
+            transition: 'transform 0.1s ease'
+          }}
+        >
+          <svg width="32" height="44" viewBox="0 0 32 44" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 0C9.373 0 4 5.373 4 12c0 8 12 24 12 24s12-16 12-24c0-6.627-5.373-12-12-12z" fill="#1DB954" stroke="#1aa34a" strokeWidth="1.5" opacity="0.9"/>
+            <circle cx="16" cy="12" r="5" fill="white"/>
+            <path d="M16 9v6M13 12h6" stroke="#1DB954" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </div>
+      )}
+
       <MapContainer
         center={position}
         zoom={2}
@@ -49,9 +121,19 @@ function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onA
         maxZoom={18}
         maxBounds={[[-85, -180], [85, 180]]}
         maxBoundsViscosity={1.0}
-        style={{ height: '100%', width: '100%' }}
-        onClick={onMapClick}
+        style={{
+          height: '100%',
+          width: '100%',
+          cursor: clickToAddMode ? 'none' : 'grab'
+        }}
       >
+        <MapClickHandler
+          onMapClick={onMapClick}
+          user={user}
+          onShowAuth={onShowAuth}
+          clickToAddMode={clickToAddMode}
+          onToggleClickToAdd={onToggleClickToAdd}
+        />
         <TileLayer
           key={darkMode ? 'dark' : 'light'}
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -78,6 +160,7 @@ function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onA
                 user={user}
                 onEdit={onEditBand}
                 onDelete={onDeleteBand}
+                translations={bandPopupTranslations}
               />
             </Popup>
           </Marker>
@@ -85,12 +168,17 @@ function Map({ bands, onBandClick, onMapClick, selectedBand, darkMode, user, onA
       </MapContainer>
 
       {/* Floating Add Band Button */}
-      <button onClick={handleAddClick} className="map-add-button">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
-        </svg>
-        <span>Agregar Banda</span>
-      </button>
+      <div className="map-buttons-container">
+        <button
+          onClick={handleClickToAddToggle}
+          className={`map-add-button ${clickToAddMode ? 'active' : ''}`}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+          </svg>
+          <span>{clickToAddMode ? 'Cancelar' : 'Agregar Banda'}</span>
+        </button>
+      </div>
     </div>
   );
 }

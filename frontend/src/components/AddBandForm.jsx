@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { bandService } from '../services/api';
 import SpotifySearch from './SpotifySearch';
+import SocialMediaModal from './SocialMediaModal';
 import '../styles/AddBandForm.css';
 
-function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
+function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onClose, translations }) {
   const isEditMode = !!band;
 
   const [formData, setFormData] = useState({
@@ -17,6 +18,8 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
     spotifyUrl: '',
     spotifyId: '',
     spotifyImageUrl: '',
+    instagramUrl: '',
+    twitterUrl: '',
     isVerified: false,
     isActive: true
   });
@@ -24,6 +27,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState(null);
+  const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
 
   // Pre-fill form when editing
   useEffect(() => {
@@ -39,11 +43,26 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
         spotifyUrl: band.spotifyUrl || '',
         spotifyId: band.spotifyId || '',
         spotifyImageUrl: band.spotifyImageUrl || '',
+        instagramUrl: band.instagramUrl || '',
+        twitterUrl: band.twitterUrl || '',
         isVerified: band.isVerified || false,
         isActive: band.isActive !== undefined ? band.isActive : true
       });
     }
   }, [band]);
+
+  // Pre-fill form with coordinates from map click
+  useEffect(() => {
+    if (initialCoordinates && !band) {
+      setFormData(prev => ({
+        ...prev,
+        latitude: initialCoordinates.latitude || '',
+        longitude: initialCoordinates.longitude || '',
+        city: initialCoordinates.city || '',
+        country: initialCoordinates.country || ''
+      }));
+    }
+  }, [initialCoordinates, band]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -103,7 +122,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
   // Función para obtener coordenadas de una ciudad usando Nominatim (OpenStreetMap)
   const searchLocation = async () => {
     if (!formData.city || !formData.country) {
-      setError('Por favor, ingresa ciudad y país primero');
+      setError(translations.errors.cityCountryRequired);
       return;
     }
 
@@ -122,18 +141,26 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
         }));
         setError('');
       } else {
-        setError('No se encontró la ubicación. Intenta con otro formato o ingresa las coordenadas manualmente.');
+        setError(translations.errors.locationNotFound);
       }
     } catch (err) {
-      setError('Error al buscar la ubicación');
+      setError(translations.errors.searchError);
     }
+  };
+
+  const handleSaveSocialMedia = (socialData) => {
+    setFormData(prev => ({
+      ...prev,
+      instagramUrl: socialData.instagramUrl,
+      twitterUrl: socialData.twitterUrl
+    }));
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <div className="modal-header">
-          <h2>{isEditMode ? 'Editar Banda' : 'Agregar Banda Local'}</h2>
+          <h2>{isEditMode ? translations.editTitle : translations.addTitle}</h2>
           <button onClick={onClose} className="close-button">&times;</button>
         </div>
 
@@ -142,22 +169,29 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
 
           {!isEditMode && <SpotifySearch onSelectArtist={handleSpotifyArtistSelect} />}
 
-          <div className="form-group">
-            <label>Nombre de la banda *</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              placeholder="Los Bourbons"
-              readOnly={!isEditMode && selectedSpotifyArtist !== null}
-            />
-          </div>
+          {/* Nombre de banda - oculto solo si viene de Spotify en modo click-to-add */}
+          {!(initialCoordinates && !isEditMode && selectedSpotifyArtist) && (
+            <div className="form-group">
+              <label>{translations.bandName}</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                placeholder="Los Bourbons"
+                readOnly={!isEditMode && selectedSpotifyArtist !== null}
+              />
+            </div>
+          )}
+          {initialCoordinates && !isEditMode && selectedSpotifyArtist && (
+            <input type="hidden" name="name" value={formData.name} />
+          )}
 
+          {/* Ubicación y coordenadas */}
           <div className="form-row">
             <div className="form-group">
-              <label>Ciudad *</label>
+              <label>{translations.city}</label>
               <input
                 type="text"
                 name="city"
@@ -169,7 +203,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
             </div>
 
             <div className="form-group">
-              <label>País *</label>
+              <label>{translations.country}</label>
               <input
                 type="text"
                 name="country"
@@ -183,7 +217,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Latitud *</label>
+              <label>{translations.latitude}</label>
               <div className="number-input-wrapper">
                 <input
                   type="number"
@@ -224,7 +258,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
             </div>
 
             <div className="form-group">
-              <label>Longitud *</label>
+              <label>{translations.longitude}</label>
               <div className="number-input-wrapper">
                 <input
                   type="number"
@@ -269,13 +303,14 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
               onClick={searchLocation}
               className="search-button"
             >
-              Buscar coordenadas
+              {translations.searchCoordinates}
             </button>
           </div>
 
+          {/* Campos opcionales - siempre visibles */}
           <div className="form-row">
             <div className="form-group">
-              <label>Año de formación</label>
+              <label>{translations.yearFormed}</label>
               <div className="number-input-wrapper">
                 <input
                   type="number"
@@ -316,7 +351,7 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
             </div>
 
             <div className="form-group">
-              <label>Género musical</label>
+              <label>{translations.genre}</label>
               <input
                 type="text"
                 name="genre"
@@ -327,6 +362,28 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
             </div>
           </div>
 
+          {/* Botón para agregar redes sociales (opcional) */}
+          <div className="social-media-section">
+            <button
+              type="button"
+              onClick={() => setShowSocialMediaModal(true)}
+              className="add-social-button"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+              </svg>
+              {translations.addSocialMedia || 'Agregar redes sociales (opcional)'}
+            </button>
+            {(formData.instagramUrl || formData.twitterUrl) && (
+              <div className="social-media-added">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+                <span>{translations.socialMediaAdded || 'Redes sociales agregadas'}</span>
+              </div>
+            )}
+          </div>
+
           <div className="form-group checkbox-group">
             <label>
               <input
@@ -335,23 +392,39 @@ function AddBandForm({ band, onBandAdded, onBandUpdated, onClose }) {
                 checked={formData.isActive}
                 onChange={handleChange}
               />
-              Banda actualmente activa
+              {translations.isActive}
             </label>
           </div>
 
           <div className="form-actions">
             <button type="button" onClick={onClose} className="cancel-button">
-              Cancelar
+              {translations.cancel}
             </button>
             <button type="submit" disabled={loading} className="submit-button">
               {loading
-                ? (isEditMode ? 'Actualizando...' : 'Agregando...')
-                : (isEditMode ? 'Actualizar Banda' : 'Agregar Banda')
+                ? (isEditMode ? translations.updating : translations.adding)
+                : (isEditMode ? translations.updateButton : translations.addButton)
               }
             </button>
           </div>
         </form>
       </div>
+
+      {/* Modal de redes sociales */}
+      <SocialMediaModal
+        isOpen={showSocialMediaModal}
+        onClose={() => setShowSocialMediaModal(false)}
+        onSave={handleSaveSocialMedia}
+        initialData={{ instagramUrl: formData.instagramUrl, twitterUrl: formData.twitterUrl }}
+        translations={{
+          title: translations.socialMediaModal?.title || '¿Agregar redes sociales?',
+          description: translations.socialMediaModal?.description || 'Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.',
+          instagram: translations.instagram || 'Instagram',
+          twitter: translations.twitter || 'X / Twitter',
+          skip: translations.socialMediaModal?.skip || 'Omitir',
+          save: translations.socialMediaModal?.save || 'Guardar'
+        }}
+      />
     </div>
   );
 }

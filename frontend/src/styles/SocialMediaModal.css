@@ -1,0 +1,112 @@
+/* Modal de redes sociales */
+.social-media-modal {
+  max-width: 500px;
+}
+
+.social-media-modal-body {
+  padding: 24px 32px;
+}
+
+.social-media-description {
+  color: #b3b3b3;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.social-media-modal-body .form-group {
+  margin-bottom: 20px;
+}
+
+.social-media-modal-body .form-group:last-child {
+  margin-bottom: 0;
+}
+
+.social-media-modal-body label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.social-icon {
+  flex-shrink: 0;
+}
+
+.instagram-icon {
+  color: #E1306C;
+}
+
+.twitter-icon {
+  color: #000000;
+}
+
+.social-media-modal-body input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #181818;
+  border: 1px solid #282828;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.social-media-modal-body input:focus {
+  outline: none;
+  border-color: #1DB954;
+  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.1);
+}
+
+.social-media-modal-body input::placeholder {
+  color: #6a6a6a;
+}
+
+.social-media-modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 32px 32px;
+  border-top: 1px solid #282828;
+}
+
+.social-media-modal-actions button {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skip-button {
+  background: transparent;
+  color: #b3b3b3;
+  border: 1px solid #535353;
+}
+
+.skip-button:hover {
+  background: #282828;
+  border-color: #727272;
+  color: white;
+  transform: scale(1.02);
+}
+
+.save-button {
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+
+.save-button:hover {
+  background: linear-gradient(135deg, #1ed760 0%, #1fdf64 100%);
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(29, 185, 84, 0.5);
+}
