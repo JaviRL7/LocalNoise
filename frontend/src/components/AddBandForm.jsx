@@ -82,7 +82,7 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
       setFormData(prev => ({
         ...prev,
         name: artist.name,
-        genre: artist.genres && artist.genres.length > 0 ? artist.genres[0] : prev.genre,
+        genre: artist.genres && artist.genres.length > 0 ? artist.genres.join(', ') : '',
         spotifyUrl: artist.spotifyUrl,
         spotifyId: artist.id,
         spotifyImageUrl: artist.imageUrl,
