@@ -97,18 +97,28 @@ exports.getProfile = async (req, res) => {
 exports.googleCallback = async (req, res) => {
   try {
     const user = req.user;
+    
+    if (!user) {
+      console.error('No user in request');
+      return res.redirect(`${process.env.FRONTEND_URL}?error=google_auth_failed`);
+    }
+    
     const token = generateToken(user.id);
-
-    // Redirect to frontend with token
-    res.redirect(`${process.env.FRONTEND_URL}?token=${token}&user=${encodeURIComponent(JSON.stringify({
+    const userData = {
       id: user.id,
       username: user.username,
       email: user.email,
       city: user.city,
       country: user.country,
       profilePhoto: user.profilePhoto
-    }))}`);
+    };
+    
+    const redirectUrl = `${process.env.FRONTEND_URL}?token=${token}&user=${encodeURIComponent(JSON.stringify(userData))}`;
+    console.log('Google callback redirect to:', redirectUrl);
+    
+    res.redirect(redirectUrl);
   } catch (error) {
+    console.error('Google callback error:', error);
     res.redirect(`${process.env.FRONTEND_URL}?error=google_auth_failed`);
   }
 };
