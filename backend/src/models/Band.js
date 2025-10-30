@@ -47,14 +47,14 @@ const Band = sequelize.define('Band', {
     type: DataTypes.TEXT,
     allowNull: true
   },
-  yearFormed: {
+  /* yearFormed: {
     type: DataTypes.INTEGER,
     allowNull: true,
     validate: {
       min: 1900,
       max: new Date().getFullYear()
     }
-  },
+  }, */
   website: {
     type: DataTypes.STRING(255),
     allowNull: true,
@@ -90,6 +90,10 @@ const Band = sequelize.define('Band', {
     allowNull: true
   },
   twitterUrl: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  tiktokUrl: {
     type: DataTypes.STRING(255),
     allowNull: true
   },

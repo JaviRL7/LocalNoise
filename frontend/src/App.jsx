@@ -4,6 +4,7 @@ import Map from './components/Map';
 import AddBandForm from './components/AddBandForm';
 import OnboardingModal from './components/OnboardingModal';
 import ConfirmModal from './components/ConfirmModal';
+import DeveloperModal from './components/DeveloperModal';
 import { bandService, authService } from './services/api';
 import { translations } from './translations';
 import './styles/App.css';
@@ -30,6 +31,7 @@ function App() {
   const [bandToDelete, setBandToDelete] = useState(null);
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [showDeveloperModal, setShowDeveloperModal] = useState(false);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -526,7 +528,7 @@ function App() {
                   <Server size={16} className="goal-icon" />
                   {t.kofiGoals?.goal1.name || 'Hosting & Domain'}
                 </span>
-                <span className="goal-amount">€{t.kofiGoals?.goal1.amount || '10'}</span>
+                <span className="goal-amount">{t.kofiGoals?.goal1.amount || '10'} €</span>
               </div>
               <div className="goal-progress-bar">
                 <div className="goal-progress-fill" style={{ width: '0%' }}></div>
@@ -539,7 +541,7 @@ function App() {
                   <Database size={16} className="goal-icon" />
                   {t.kofiGoals?.goal2.name || 'Database'}
                 </span>
-                <span className="goal-amount">€{t.kofiGoals?.goal2.amount || '25'}</span>
+                <span className="goal-amount">{t.kofiGoals?.goal2.amount || '25'} €</span>
               </div>
               <div className="goal-progress-bar">
                 <div className="goal-progress-fill" style={{ width: '0%' }}></div>
@@ -552,7 +554,7 @@ function App() {
                   <Sparkles size={16} className="goal-icon" />
                   {t.kofiGoals?.goal3.name || 'New Features'}
                 </span>
-                <span className="goal-amount">€{t.kofiGoals?.goal3.amount || '50'}</span>
+                <span className="goal-amount">{t.kofiGoals?.goal3.amount || '50'} €</span>
               </div>
               <div className="goal-progress-bar">
                 <div className="goal-progress-fill" style={{ width: '0%' }}></div>
@@ -591,8 +593,8 @@ function App() {
       )}
 
       {showAuth && (
-        <div className="modal-overlay">
-          <div className="modal-content auth-modal">
+        <div className="modal-overlay" onClick={() => setShowAuth(false)}>
+          <div className="modal-content auth-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>{authMode === 'login' ? t.auth.login : t.auth.register}</h2>
               <button onClick={() => setShowAuth(false)} className="close-button">&times;</button>
@@ -603,7 +605,7 @@ function App() {
 
               {authMode === 'login' ? (
                 <form onSubmit={handleLogin}>
-                  <button type="button" onClick={handleGoogleLogin} className="google-button">
+                  <button type="button" onClick={handleGoogleLogin} className="google-auth-button">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
                       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
@@ -618,21 +620,31 @@ function App() {
                   </div>
 
                   <div className="form-group">
-                    <label>{t.auth.email}</label>
-                    <input type="email" name="email" required />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                      </svg>
+                      {t.auth.email}
+                    </label>
+                    <input type="email" name="email" placeholder="tu@email.com" required />
                   </div>
                   <div className="form-group">
-                    <label>{t.auth.password}</label>
-                    <input type="password" name="password" required />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                      </svg>
+                      {t.auth.password}
+                    </label>
+                    <input type="password" name="password" placeholder="••••••••" required />
                   </div>
-                  <button type="submit" className="submit-button">{t.auth.loginButton}</button>
+                  <button type="submit" className="submit-button auth-submit">{t.auth.loginButton}</button>
                   <p className="auth-switch">
                     {t.auth.noAccount} <button type="button" onClick={() => { setAuthMode('register'); setError(''); }}>{t.auth.registerButton}</button>
                   </p>
                 </form>
               ) : (
                 <form onSubmit={handleRegister}>
-                  <button type="button" onClick={handleGoogleLogin} className="google-button">
+                  <button type="button" onClick={handleGoogleLogin} className="google-auth-button">
                     <svg width="18" height="18" viewBox="0 0 18 18">
                       <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/>
                       <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
@@ -647,26 +659,51 @@ function App() {
                   </div>
 
                   <div className="form-group">
-                    <label>{t.auth.username}</label>
-                    <input type="text" name="username" required />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                      {t.auth.username}
+                    </label>
+                    <input type="text" name="username" placeholder="tunombre" required />
                   </div>
                   <div className="form-group">
-                    <label>{t.auth.email}</label>
-                    <input type="email" name="email" required />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                      </svg>
+                      {t.auth.email}
+                    </label>
+                    <input type="email" name="email" placeholder="tu@email.com" required />
                   </div>
                   <div className="form-group">
-                    <label>{t.auth.password}</label>
-                    <input type="password" name="password" required />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                      </svg>
+                      {t.auth.password}
+                    </label>
+                    <input type="password" name="password" placeholder="••••••••" required />
                   </div>
                   <div className="form-group">
-                    <label>{t.auth.city}</label>
-                    <input type="text" name="city" />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                      </svg>
+                      {t.auth.city}
+                    </label>
+                    <input type="text" name="city" placeholder="Madrid" />
                   </div>
                   <div className="form-group">
-                    <label>{t.auth.country}</label>
-                    <input type="text" name="country" />
+                    <label>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ marginRight: '8px', opacity: 0.7 }}>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                      </svg>
+                      {t.auth.country}
+                    </label>
+                    <input type="text" name="country" placeholder="España" />
                   </div>
-                  <button type="submit" className="submit-button">{t.auth.registerButton}</button>
+                  <button type="submit" className="submit-button auth-submit">{t.auth.registerButton}</button>
                   <p className="auth-switch">
                     {t.auth.hasAccount} <button type="button" onClick={() => { setAuthMode('login'); setError(''); }}>{t.auth.loginButton}</button>
                   </p>
@@ -764,6 +801,13 @@ function App() {
             © 2025 - Made with <Heart size={12} fill="#FF5E5B" style={{ display: 'inline', verticalAlign: 'middle', margin: '0 2px' }} /> for local music
           </p>
           <div className="footer-links">
+            <button onClick={() => setShowDeveloperModal(true)} className="footer-link-button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+              </svg>
+              Created by
+            </button>
+            <span className="separator">•</span>
             <a href="https://github.com/JaviRL7" target="_blank" rel="noopener noreferrer">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
@@ -780,6 +824,12 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Developer Modal */}
+      <DeveloperModal 
+        isOpen={showDeveloperModal} 
+        onClose={() => setShowDeveloperModal(false)} 
+      />
     </div>
   );
 }

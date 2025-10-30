@@ -89,6 +89,12 @@
   font-weight: 700;
 }
 
+.onboarding-description em {
+  color: #ffffff;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .onboarding-dots {
   display: flex;
   justify-content: center;

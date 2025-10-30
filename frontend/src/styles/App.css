@@ -726,13 +726,13 @@ body {
 
 .info-panel-overlay h2 {
   font-size: 1.2rem;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   color: white;
   font-weight: 900;
 }
 
 .info-panel-overlay p {
-  margin-bottom: 8px;
+  margin-bottom: 14px;
   color: #b3b3b3;
   font-size: 0.9rem;
 }
@@ -883,76 +883,96 @@ body {
 }
 
 .auth-form-container {
-  padding: 20px;
+  padding: 32px;
 }
 
 .auth-form-container .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .auth-form-container .form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #333;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #1DB954;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .auth-form-container .form-group input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(29, 185, 84, 0.2);
+  border-radius: 8px;
+  font-size: 15px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.auth-form-container .form-group input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .auth-form-container .form-group input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #1DB954;
+  background: rgba(29, 185, 84, 0.08);
+  box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.1);
 }
 
-.auth-form-container .submit-button {
+.auth-form-container .auth-submit {
   width: 100%;
-  padding: 12px;
-  background-color: #3498db;
+  padding: 14px;
+  background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   margin-top: 8px;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.auth-form-container .submit-button:hover {
-  background-color: #2980b9;
+.auth-form-container .auth-submit:hover {
+  background: linear-gradient(135deg, #1ed760 0%, #1DB954 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.4);
 }
 
 .auth-switch {
   text-align: center;
-  margin-top: 16px;
-  color: #666;
+  margin-top: 20px;
+  color: #b3b3b3;
   font-size: 0.9rem;
 }
 
 .auth-switch button {
   background: none;
   border: none;
-  color: #3498db;
+  color: #1DB954;
   cursor: pointer;
-  text-decoration: underline;
+  font-weight: 600;
   font-size: 0.9rem;
+  transition: all 0.2s ease;
 }
 
 .auth-switch button:hover {
-  color: #2980b9;
+  color: #1ed760;
+  text-decoration: underline;
 }
 
 /* Google OAuth Button */
-.google-button {
+.google-auth-button {
   width: 100%;
-  padding: 12px;
-  background: white;
-  border: 1px solid #ddd;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   font-size: 15px;
   font-weight: 600;
@@ -961,18 +981,19 @@ body {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   color: #3c4043;
   margin-bottom: 16px;
 }
 
-.google-button:hover {
-  background: #f8f9fa;
-  border-color: #1DB954;
-  transform: scale(1.02);
+.google-auth-button:hover {
+  background: white;
+  border-color: rgba(29, 185, 84, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.google-button svg {
+.google-auth-button svg {
   flex-shrink: 0;
 }
 
@@ -981,21 +1002,23 @@ body {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 20px 0;
-  color: #999;
+  margin: 24px 0;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .auth-divider::before,
 .auth-divider::after {
   content: '';
   flex: 1;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(29, 185, 84, 0.2);
 }
 
 .auth-divider span {
   padding: 0 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 @media (max-width: 1024px) {
@@ -1174,8 +1197,24 @@ body {
   font-weight: 500;
 }
 
-.footer-links a:hover {
-  color: #58a6ff;
+.footer-link-button {
+  background: none;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+}
+
+.footer-links a:hover,
+.footer-link-button:hover {
+  color: #1DB954;
   transform: translateY(-1px);
 }
 
@@ -1237,8 +1276,8 @@ body {
 
 /* Ko-fi Goals Section */
 .kofi-goals-header {
-  margin-top: 16px;
-  padding: 10px 14px;
+  margin-top: 24px;
+  padding: 14px 16px;
   background: rgba(29, 185, 84, 0.1);
   border: 1px solid rgba(29, 185, 84, 0.3);
   border-radius: 8px;
@@ -1276,8 +1315,8 @@ body {
 }
 
 .kofi-goal {
-  margin-top: 10px;
-  padding: 10px;
+  margin-top: 16px;
+  padding: 14px 12px;
   background: rgba(29, 185, 84, 0.05);
   border: 1px solid rgba(29, 185, 84, 0.15);
   border-radius: 8px;
@@ -1288,7 +1327,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .goal-name {
@@ -1308,7 +1347,7 @@ body {
 .goal-amount {
   font-size: 0.8rem;
   font-weight: 700;
-  color: #FF5E5B;
+  color: #1DB954;
 }
 
 .goal-progress-bar {
@@ -1317,7 +1356,7 @@ body {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .goal-progress-fill {
@@ -1339,7 +1378,7 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 9px 14px;
+  padding: 10px 16px;
   background: linear-gradient(135deg, #FF5E5B 0%, #FF3E3B 100%);
   color: white;
   text-decoration: none;
@@ -1348,7 +1387,7 @@ body {
   font-weight: 700;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(255, 94, 91, 0.3);
-  margin-top: 12px;
+  margin-top: 18px;
   gap: 6px;
 }
 

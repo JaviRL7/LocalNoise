@@ -61,7 +61,7 @@ exports.createBand = async (req, res) => {
       longitude,
       genre,
       description,
-      yearFormed,
+      // yearFormed,
       website,
       spotifyUrl,
       spotifyId,
@@ -69,6 +69,8 @@ exports.createBand = async (req, res) => {
       isVerified,
       youtubeUrl,
       instagramUrl,
+      twitterUrl,
+      tiktokUrl,
       isActive
     } = req.body;
 
@@ -108,7 +110,7 @@ exports.createBand = async (req, res) => {
       longitude: adjustedLon,
       genre,
       description,
-      yearFormed,
+      // yearFormed,
       website,
       spotifyUrl,
       spotifyId,
@@ -116,6 +118,8 @@ exports.createBand = async (req, res) => {
       isVerified: isVerified || false,
       youtubeUrl,
       instagramUrl,
+      twitterUrl,
+      tiktokUrl,
       isActive,
       addedBy: req.user.id
     });

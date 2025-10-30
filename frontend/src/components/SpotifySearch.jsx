@@ -77,7 +77,7 @@ function SpotifySearch({ onSelectArtist }) {
             disabled={searching || searchQuery.trim().length < 2}
             className="search-button-spotify"
           >
-            {searching ? 'Buscando...' : 'Buscar en Spotify'}
+            {searching ? 'Buscando...' : 'Buscar'}
           </button>
         </div>
       </div>

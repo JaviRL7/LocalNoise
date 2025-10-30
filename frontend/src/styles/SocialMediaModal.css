@@ -1,22 +1,27 @@
 /* Modal de redes sociales */
 .social-media-modal {
-  max-width: 500px;
+  max-width: 540px;
 }
 
 .social-media-modal-body {
-  padding: 24px 32px;
+  padding: 28px 36px 32px;
 }
 
 .social-media-description {
   color: #b3b3b3;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin: 0 0 24px 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin: 0 0 2rem 0;
   text-align: center;
 }
 
+.social-media-description .highlight-text {
+  color: #1DB954;
+  font-weight: 700;
+}
+
 .social-media-modal-body .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 28px;
 }
 
 .social-media-modal-body .form-group:last-child {
@@ -24,89 +29,107 @@
 }
 
 .social-media-modal-body label {
-  display: flex;
+  display: inline-flex;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 0.625rem;
   color: white;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+.social-media-modal-body label span {
+  line-height: 22px;
+  margin-left: 1rem;
 }
 
 .social-icon {
   flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  color: #1DB954;
+  display: inline-block;
+  vertical-align: middle;
 }
 
-.instagram-icon {
-  color: #E1306C;
-}
-
-.twitter-icon {
-  color: #000000;
+.social-media-modal-body .form-group:hover .social-icon {
+  transform: scale(1.1);
 }
 
 .social-media-modal-body input {
   width: 100%;
-  padding: 12px 16px;
+  height: 44px;
+  padding: 0 16px;
   background: #181818;
-  border: 1px solid #282828;
-  border-radius: 8px;
+  border: none;
+  border-bottom: 2px solid #282828;
+  border-radius: 0;
   color: white;
   font-size: 0.9rem;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 44px;
+}
+
+.social-media-modal-body input:hover {
+  border-bottom-color: #3a3a3a;
+  background: #1a1a1a;
 }
 
 .social-media-modal-body input:focus {
   outline: none;
-  border-color: #1DB954;
-  box-shadow: 0 0 0 2px rgba(29, 185, 84, 0.1);
+  border-bottom-color: #1DB954;
+  background: #1a1a1a;
 }
 
 .social-media-modal-body input::placeholder {
   color: #6a6a6a;
+  font-size: 0.88rem;
 }
 
 .social-media-modal-actions {
   display: flex;
-  gap: 12px;
-  padding: 20px 32px 32px;
+  gap: 14px;
+  padding: 24px 36px 32px;
   border-top: 1px solid #282828;
 }
 
 .social-media-modal-actions button {
   flex: 1;
-  padding: 12px 24px;
+  padding: 14px 28px;
   border: none;
-  border-radius: 24px;
+  border-radius: 28px;
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
 }
 
 .skip-button {
   background: transparent;
   color: #b3b3b3;
-  border: 1px solid #535353;
+  border: 2px solid #535353;
 }
 
 .skip-button:hover {
   background: #282828;
   border-color: #727272;
   color: white;
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .save-button {
   background: linear-gradient(135deg, #1DB954 0%, #1ed760 100%);
   color: white;
-  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+  box-shadow: 0 4px 14px rgba(29, 185, 84, 0.35);
+  border: 2px solid transparent;
 }
 
 .save-button:hover {
   background: linear-gradient(135deg, #1ed760 0%, #1fdf64 100%);
-  transform: scale(1.02);
-  box-shadow: 0 6px 16px rgba(29, 185, 84, 0.5);
+  transform: scale(1.03) translateY(-1px);
+  box-shadow: 0 6px 18px rgba(29, 185, 84, 0.5);
 }

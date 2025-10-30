@@ -97,13 +97,13 @@
 /* REPRODUCTOR PEQUEÑO - Estilo Spotify */
 .player-section {
   background: #181818;
-  padding: 8px 0;
+  padding: 6px 0;
 }
 
 .loading,
 .no-tracks {
   text-align: center;
-  padding: 20px;
+  padding: 12px;
   color: #b3b3b3;
   font-size: 0.875rem;
   line-height: 1.6;
@@ -146,19 +146,15 @@
   grid-template-columns: 40px 1fr 40px;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
+  padding: 6px 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
   border-radius: 4px;
   margin: 0 8px;
 }
 
-.track-row:hover {
-  background: #282828;
-}
-
 .track-row.active {
-  background: #282828;
+  background: transparent;
 }
 
 .track-row.active .track-title-mini {
@@ -210,8 +206,8 @@
   font-size: 0.75rem;
   color: #8b949e;
   margin: 0;
-  padding: 12px 16px;
-  background: #0a0a0a;
+  padding: 8px 16px;
+  background: transparent;
   border-top: 1px solid #1a1a1a;
   text-align: center;
   font-weight: 500;
@@ -224,13 +220,14 @@
   font-weight: 600;
 }
 
-/* BAND ACTIONS (Edit/Delete) */
+/* BAND ACTIONS (Edit/Delete) - En línea con enlaces */
 .band-actions {
   display: flex;
-  gap: 12px;
-  padding: 10px 16px;
-  background: #121212;
-  border-top: 1px solid #282828;
+  gap: 8px;
+  align-items: center;
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid #282828;
 }
 
 .action-button {
@@ -243,28 +240,23 @@
   cursor: pointer;
   transition: all 0.2s;
   background: transparent;
-}
-
-.edit-button {
-  color: #1DB954;
+  color: #b3b3b3;
 }
 
 .edit-button:hover {
-  background: rgba(29, 185, 84, 0.1);
-  transform: scale(1.05);
-}
-
-.delete-button {
-  color: #e22134;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
 }
 
 .delete-button:hover {
-  background: rgba(226, 33, 52, 0.1);
-  transform: scale(1.05);
+  background: rgba(255, 82, 82, 0.15);
+  color: #FF5252;
 }
 
 .action-button svg {
   flex-shrink: 0;
+  width: 18px;
+  height: 18px;
 }
 
 /* ENLACES */
@@ -272,7 +264,8 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 8px 16px 12px 16px;
+  align-items: center;
+  padding: 12px 16px 0 16px;
   background: #121212;
 }
 
@@ -280,60 +273,129 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   text-decoration: none;
   transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  color: #b3b3b3;
 }
 
 .spotify-link {
   background: transparent;
-  border: 1px solid #1DB954;
-  color: #1DB954;
-  padding: 8px 16px;
-  font-size: 0.8rem;
+  border: 1px solid #535353;
+  color: #b3b3b3 !important;
+  padding: 8px 14px;
+  font-size: 0.75rem;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   transition: all 0.2s ease;
 }
 
 .spotify-link svg {
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
+  color: #b3b3b3;
 }
 
 .spotify-link:hover {
-  background: rgba(29, 185, 84, 0.1);
-  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #727272;
+  color: #ffffff !important;
 }
 
 .instagram-link {
-  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(188, 24, 136, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid #535353;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: #b3b3b3 !important;
+}
+
+.instagram-link svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #b3b3b3 !important;
 }
 
 .instagram-link:hover {
-  transform: scale(1.05) translateY(-1px);
-  box-shadow: 0 4px 12px rgba(188, 24, 136, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #727272;
+  color: #ffffff !important;
+}
+
+.instagram-link:hover svg {
+  color: #ffffff !important;
 }
 
 .twitter-link {
-  background: #000000;
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid #535353;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: #b3b3b3 !important;
+}
+
+.twitter-link svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #b3b3b3 !important;
 }
 
 .twitter-link:hover {
-  background: #1a1a1a;
-  transform: scale(1.05) translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #727272;
+  color: #ffffff !important;
+}
+
+.twitter-link:hover svg {
+  color: #ffffff !important;
+}
+
+.tiktok-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  border: 1px solid #535353;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: #b3b3b3 !important;
+}
+
+.tiktok-link svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: #b3b3b3 !important;
+}
+
+.tiktok-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #727272;
+  color: #ffffff !important;
+}
+
+.tiktok-link:hover svg {
+  color: #ffffff !important;
 }
 
 .youtube-link {

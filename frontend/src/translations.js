@@ -58,7 +58,7 @@ export const translations = {
       updateButton: "Actualizar Banda",
       addButton: "Agregar Banda",
       socialMediaModal: {
-        title: "¿Agregar redes sociales?",
+        title: "Agregar redes sociales",
         description: "Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.",
         skip: "Omitir",
         save: "Guardar"
@@ -118,15 +118,15 @@ export const translations = {
       steps: [
         {
           title: 'Bienvenido a LocalNoise',
-          description: '<strong>Descubre</strong> y <strong>comparte</strong> bandas locales del mundo entero. Ya sabemos que los Beatles son de Liverpool, pero aquí queremos que conozcas a las bandas <strong>tocando este fin de semana</strong> en tu barrio o al otro lado del planeta.'
+          description: '<strong>Descubre</strong> y <strong>comparte</strong> bandas locales del mundo. Ya sabemos que <em>los Beatles son de Liverpool</em>, pero aquí queremos que conozcas bandas <strong>tocando este fin de semana</strong> cerca de ti.'
         },
         {
           title: 'Explora el Mapa',
-          description: 'Haz clic en cualquier <strong>marcador verde</strong> para ver la banda, escuchar su música y descubrir qué suena en esa zona. Prepárate para caer en un <strong>agujero musical</strong> del que no querrás salir.'
+          description: 'Haz clic en cualquier <strong>marcador verde</strong> para ver la banda, escuchar su música y descubrir qué suena en esa zona.'
         },
         {
           title: 'Escucha Música',
-          description: 'Cada banda tiene <strong>previews de 30 segundos</strong> (gracias Deezer) y enlace directo a <strong>Spotify</strong>. Ideal para descubrir tu <strong>nueva banda favorita</strong> sin moverte del mapa.'
+          description: 'Cada banda incluye <strong>previews de 30 segundos de Deezer</strong> y enlace directo a <strong>Spotify</strong>. Perfecta combinación para descubrir música nueva sin salir del mapa.'
         },
         {
           title: 'Agrega Bandas',
@@ -134,7 +134,7 @@ export const translations = {
         },
         {
           title: 'Edita y Gestiona',
-          description: 'Puedes <strong>editar o eliminar</strong> las bandas que agregaste directamente desde su popup. Esto va de mantener el mapa <strong>vivo y actualizado</strong>.'
+          description: 'Puedes <strong>editar o eliminar</strong> las bandas que agregaste directamente desde su popup para mantener el mapa actualizado.'
         }
       ]
     }
@@ -198,7 +198,7 @@ export const translations = {
       updateButton: "Update Band",
       addButton: "Add Band",
       socialMediaModal: {
-        title: "Add social media?",
+        title: "Add social media",
         description: "Help others find this band on social media. This step is completely optional.",
         skip: "Skip",
         save: "Save"
@@ -258,15 +258,15 @@ export const translations = {
       steps: [
         {
           title: 'Welcome to LocalNoise',
-          description: '<strong>Discover</strong> and <strong>share</strong> local bands from around the world. We all know the Beatles are from Liverpool, but here we want you to discover bands <strong>playing this weekend</strong> in your neighborhood or on the other side of the planet.'
+          description: '<strong>Discover</strong> and <strong>share</strong> local bands from around the world. We all know <em>the Beatles are from Liverpool</em>, but here we want you to discover bands <strong>playing this weekend</strong> near you.'
         },
         {
           title: 'Explore the Map',
-          description: 'Click on any <strong>green marker</strong> to see the band, listen to their music and discover what\'s playing in that area. Get ready to fall into a <strong>musical rabbit hole</strong> you won\'t want to leave.'
+          description: 'Click on any <strong>green marker</strong> to see the band, listen to their music and discover what\'s playing in that area.'
         },
         {
           title: 'Listen to Music',
-          description: 'Each band has <strong>30-second previews</strong> (thanks Deezer) and direct link to <strong>Spotify</strong>. Perfect for discovering your <strong>new favorite band</strong> without leaving the map.'
+          description: 'Each band includes <strong>30-second previews from Deezer</strong> and direct link to <strong>Spotify</strong>. The perfect combo to discover new music without leaving the map.'
         },
         {
           title: 'Add Bands',
@@ -274,7 +274,7 @@ export const translations = {
         },
         {
           title: 'Edit and Manage',
-          description: 'You can <strong>edit or delete</strong> the bands you added directly from their popup. This is all about keeping the map <strong>alive and updated</strong>.'
+          description: 'You can <strong>edit or delete</strong> the bands you added directly from their popup to keep the map updated.'
         }
       ]
     }

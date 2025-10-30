@@ -14,12 +14,13 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
     latitude: '',
     longitude: '',
     genre: '',
-    yearFormed: '',
+    // yearFormed: '',
     spotifyUrl: '',
     spotifyId: '',
     spotifyImageUrl: '',
     instagramUrl: '',
     twitterUrl: '',
+    tiktokUrl: '',
     isVerified: false,
     isActive: true
   });
@@ -39,12 +40,13 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
         latitude: band.latitude || '',
         longitude: band.longitude || '',
         genre: band.genre || '',
-        yearFormed: band.yearFormed || '',
+        // yearFormed: band.yearFormed || '',
         spotifyUrl: band.spotifyUrl || '',
         spotifyId: band.spotifyId || '',
         spotifyImageUrl: band.spotifyImageUrl || '',
         instagramUrl: band.instagramUrl || '',
         twitterUrl: band.twitterUrl || '',
+        tiktokUrl: band.tiktokUrl || '',
         isVerified: band.isVerified || false,
         isActive: band.isActive !== undefined ? band.isActive : true
       });
@@ -152,7 +154,8 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
     setFormData(prev => ({
       ...prev,
       instagramUrl: socialData.instagramUrl,
-      twitterUrl: socialData.twitterUrl
+      twitterUrl: socialData.twitterUrl,
+      tiktokUrl: socialData.tiktokUrl
     }));
   };
 
@@ -310,47 +313,6 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
           {/* Campos opcionales - siempre visibles */}
           <div className="form-row">
             <div className="form-group">
-              <label>{translations.yearFormed}</label>
-              <div className="number-input-wrapper">
-                <input
-                  type="number"
-                  name="yearFormed"
-                  value={formData.yearFormed}
-                  onChange={handleChange}
-                  min="1900"
-                  max={new Date().getFullYear()}
-                  placeholder="2010"
-                />
-                <div className="number-controls">
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      yearFormed: prev.yearFormed ? Math.min(parseInt(prev.yearFormed) + 1, new Date().getFullYear()).toString() : '2000'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 14l5-5 5 5z"/>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      yearFormed: prev.yearFormed ? Math.max(parseInt(prev.yearFormed) - 1, 1900).toString() : '2000'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
               <label>{translations.genre}</label>
               <input
                 type="text"
@@ -374,7 +336,7 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
               </svg>
               {translations.addSocialMedia || 'Agregar redes sociales (opcional)'}
             </button>
-            {(formData.instagramUrl || formData.twitterUrl) && (
+            {(formData.instagramUrl || formData.twitterUrl || formData.tiktokUrl) && (
               <div className="social-media-added">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
@@ -415,11 +377,13 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
         isOpen={showSocialMediaModal}
         onClose={() => setShowSocialMediaModal(false)}
         onSave={handleSaveSocialMedia}
-        initialData={{ instagramUrl: formData.instagramUrl, twitterUrl: formData.twitterUrl }}
+        initialData={{ instagramUrl: formData.instagramUrl, twitterUrl: formData.twitterUrl, tiktokUrl: formData.tiktokUrl }}
         translations={{
           title: translations.socialMediaModal?.title || '¿Agregar redes sociales?',
           description: translations.socialMediaModal?.description || 'Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.',
           instagram: translations.instagram || 'Instagram',
+          twitter: translations.twitter || 'X / Twitter',
+          tiktok: translations.tiktok || 'TikTok',
           twitter: translations.twitter || 'X / Twitter',
           skip: translations.socialMediaModal?.skip || 'Omitir',
           save: translations.socialMediaModal?.save || 'Guardar'
