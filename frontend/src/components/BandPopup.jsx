@@ -30,11 +30,6 @@ function BandPopup({ band, user, onEdit, onDelete, translations }) {
       const tracksData = response.data.tracks || [];
       setTracks(tracksData);
 
-      // Log del método usado para debugging
-      if (response.data.method) {
-        console.log(`🎵 Método usado: ${response.data.method} (${tracksData.length} tracks)`);
-      }
-
       // Reproducir automáticamente la primera canción después de un breve delay
       if (tracksData.length > 0) {
         setTimeout(() => {
