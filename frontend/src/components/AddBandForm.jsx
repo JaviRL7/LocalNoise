@@ -384,7 +384,6 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
           instagram: translations.instagram || 'Instagram',
           twitter: translations.twitter || 'X / Twitter',
           tiktok: translations.tiktok || 'TikTok',
-          twitter: translations.twitter || 'X / Twitter',
           skip: translations.socialMediaModal?.skip || 'Omitir',
           save: translations.socialMediaModal?.save || 'Guardar'
         }}

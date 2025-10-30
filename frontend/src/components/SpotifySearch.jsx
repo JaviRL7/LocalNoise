@@ -92,7 +92,7 @@ function SpotifySearch({ onSelectArtist }) {
         <div className="selected-artist">
           <div className="selected-artist-header">
             <img
-              src={selectedArtist.imageUrl || '/placeholder-artist.png'}
+              src={selectedArtist.imageUrl || '/placeholder-artist.svg'}
               alt={selectedArtist.name}
               className="selected-artist-image"
             />
@@ -124,7 +124,7 @@ function SpotifySearch({ onSelectArtist }) {
               onClick={() => handleSelectArtist(artist)}
             >
               <img
-                src={artist.imageUrl || '/placeholder-artist.png'}
+                src={artist.imageUrl || '/placeholder-artist.svg'}
                 alt={artist.name}
                 className="result-image"
               />
