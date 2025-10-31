@@ -92,6 +92,11 @@ export const translations = {
       socialMediaModal: {
         title: "Agregar redes sociales",
         description: "Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.",
+        descriptionPart1: "Ayuda a otros a encontrar a esta banda en sus ",
+        descriptionHighlight1: "redes sociales",
+        descriptionPart2: ". Este paso es completamente ",
+        descriptionHighlight2: "opcional",
+        descriptionPart3: ".",
         skip: "Omitir",
         save: "Guardar"
       },
@@ -266,6 +271,11 @@ export const translations = {
       socialMediaModal: {
         title: "Add social media",
         description: "Help others find this band on social media. This step is completely optional.",
+        descriptionPart1: "Help others find this band on ",
+        descriptionHighlight1: "social media",
+        descriptionPart2: ". This step is completely ",
+        descriptionHighlight2: "optional",
+        descriptionPart3: ".",
         skip: "Skip",
         save: "Save"
       },
@@ -440,6 +450,11 @@ export const translations = {
       socialMediaModal: {
         title: "Ajouter les réseaux sociaux?",
         description: "Aidez les autres à trouver ce groupe sur les réseaux sociaux. Cette étape est complètement optionnelle.",
+        descriptionPart1: "Aidez les autres à trouver ce groupe sur les ",
+        descriptionHighlight1: "réseaux sociaux",
+        descriptionPart2: ". Cette étape est complètement ",
+        descriptionHighlight2: "optionnelle",
+        descriptionPart3: ".",
         skip: "Passer",
         save: "Enregistrer"
       },
@@ -614,6 +629,11 @@ export const translations = {
       socialMediaModal: {
         title: "Aggiungere i social media?",
         description: "Aiuta gli altri a trovare questa band sui social media. Questo passaggio è completamente opzionale.",
+        descriptionPart1: "Aiuta gli altri a trovare questa band sui ",
+        descriptionHighlight1: "social media",
+        descriptionPart2: ". Questo passaggio è completamente ",
+        descriptionHighlight2: "opzionale",
+        descriptionPart3: ".",
         skip: "Salta",
         save: "Salva"
       },
@@ -788,6 +808,11 @@ export const translations = {
       socialMediaModal: {
         title: "ソーシャルメディアを追加しますか？",
         description: "他の人がソーシャルメディアでこのバンドを見つけるのに役立ちます。このステップは完全に任意です。",
+        descriptionPart1: "他の人が",
+        descriptionHighlight1: "ソーシャルメディア",
+        descriptionPart2: "でこのバンドを見つけるのに役立ちます。このステップは完全に",
+        descriptionHighlight2: "任意",
+        descriptionPart3: "です。",
         skip: "スキップ",
         save: "保存"
       },
@@ -962,6 +987,11 @@ export const translations = {
       socialMediaModal: {
         title: "소셜 미디어를 추가하시겠습니까?",
         description: "다른 사람들이 소셜 미디어에서 이 밴드를 찾을 수 있도록 도와주세요. 이 단계는 완전히 선택사항입니다.",
+        descriptionPart1: "다른 사람들이 ",
+        descriptionHighlight1: "소셜 미디어",
+        descriptionPart2: "에서 이 밴드를 찾을 수 있도록 도와주세요. 이 단계는 완전히 ",
+        descriptionHighlight2: "선택사항",
+        descriptionPart3: "입니다.",
         skip: "건너뛰기",
         save: "저장"
       },

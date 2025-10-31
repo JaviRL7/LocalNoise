@@ -9,20 +9,23 @@ function SocialMediaModal({ isOpen, onClose, onSave, initialData, translations }
   });
 
   const getDescription = () => {
-    const isSpanish = translations?.instagram === 'Instagram' || !translations?.instagram;
-    if (isSpanish) {
+    if (translations?.descriptionPart1) {
       return (
         <>
-          Ayuda a otros a encontrar a esta banda en sus <span className="highlight-text">redes sociales</span>. Este paso es completamente <span className="highlight-text">opcional</span>.
-        </>
-      );
-    } else {
-      return (
-        <>
-          Help others find this band on <span className="highlight-text">social media</span>. This step is completely <span className="highlight-text">optional</span>.
+          {translations.descriptionPart1}
+          <span className="highlight-text">{translations.descriptionHighlight1}</span>
+          {translations.descriptionPart2}
+          <span className="highlight-text">{translations.descriptionHighlight2}</span>
+          {translations.descriptionPart3}
         </>
       );
     }
+    // Fallback a español
+    return (
+      <>
+        Ayuda a otros a encontrar a esta banda en sus <span className="highlight-text">redes sociales</span>. Este paso es completamente <span className="highlight-text">opcional</span>.
+      </>
+    );
   };
 
   useEffect(() => {
