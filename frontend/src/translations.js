@@ -423,6 +423,20 @@ export const translations = {
       adding: "Ajout en cours...",
       updateButton: "Mettre à jour le Groupe",
       addButton: "Ajouter le Groupe",
+      spotifySearch: {
+        title: "Rechercher sur Spotify",
+        searchByName: "Rechercher par nom",
+        pasteUrl: "Coller l'URL Spotify",
+        placeholder: "Rechercher un groupe sur Spotify...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "Rechercher",
+        searching: "Recherche en cours...",
+        noResults: "Aucun résultat trouvé",
+        selectArtist: "Sélectionner",
+        minCharsError: "Tapez au moins 2 caractères",
+        urlError: "Collez l'URL Spotify de l'artiste",
+        tip: "Pour les petits groupes, il peut être nécessaire de coller l'URL Spotify"
+      },
       socialMediaModal: {
         title: "Ajouter les réseaux sociaux?",
         description: "Aidez les autres à trouver ce groupe sur les réseaux sociaux. Cette étape est complètement optionnelle.",
@@ -583,6 +597,20 @@ export const translations = {
       adding: "Aggiunta in corso...",
       updateButton: "Aggiorna Band",
       addButton: "Aggiungi Band",
+      spotifySearch: {
+        title: "Cerca su Spotify",
+        searchByName: "Cerca per nome",
+        pasteUrl: "Incolla URL Spotify",
+        placeholder: "Cerca band su Spotify...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "Cerca",
+        searching: "Ricerca in corso...",
+        noResults: "Nessun risultato trovato",
+        selectArtist: "Seleziona",
+        minCharsError: "Digita almeno 2 caratteri",
+        urlError: "Incolla l'URL Spotify dell'artista",
+        tip: "Per le band piccole, potrebbe essere necessario incollare l'URL Spotify"
+      },
       socialMediaModal: {
         title: "Aggiungere i social media?",
         description: "Aiuta gli altri a trovare questa band sui social media. Questo passaggio è completamente opzionale.",
@@ -743,6 +771,20 @@ export const translations = {
       adding: "追加中...",
       updateButton: "バンドを更新",
       addButton: "バンドを追加",
+      spotifySearch: {
+        title: "Spotifyで検索",
+        searchByName: "名前で検索",
+        pasteUrl: "Spotify URLを貼り付け",
+        placeholder: "Spotifyでバンドを検索...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "検索",
+        searching: "検索中...",
+        noResults: "結果が見つかりません",
+        selectArtist: "選択",
+        minCharsError: "少なくとも2文字入力してください",
+        urlError: "アーティストのSpotify URLを貼り付けてください",
+        tip: "小規模なバンドの場合、Spotify URLを貼り付ける必要があるかもしれません"
+      },
       socialMediaModal: {
         title: "ソーシャルメディアを追加しますか？",
         description: "他の人がソーシャルメディアでこのバンドを見つけるのに役立ちます。このステップは完全に任意です。",
@@ -903,6 +945,20 @@ export const translations = {
       adding: "추가 중...",
       updateButton: "밴드 업데이트",
       addButton: "밴드 추가",
+      spotifySearch: {
+        title: "Spotify에서 검색",
+        searchByName: "이름으로 검색",
+        pasteUrl: "Spotify URL 붙여넣기",
+        placeholder: "Spotify에서 밴드 검색...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "검색",
+        searching: "검색 중...",
+        noResults: "결과를 찾을 수 없습니다",
+        selectArtist: "선택",
+        minCharsError: "최소 2자 이상 입력하세요",
+        urlError: "아티스트의 Spotify URL을 붙여넣으세요",
+        tip: "소규모 밴드의 경우 Spotify URL을 붙여넣어야 할 수 있습니다"
+      },
       socialMediaModal: {
         title: "소셜 미디어를 추가하시겠습니까?",
         description: "다른 사람들이 소셜 미디어에서 이 밴드를 찾을 수 있도록 도와주세요. 이 단계는 완전히 선택사항입니다.",
