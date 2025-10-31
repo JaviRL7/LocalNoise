@@ -89,67 +89,177 @@ body {
   align-items: center;
 }
 
+/* Mobile menu overlay */
+.mobile-menu-overlay {
+  display: none;
+}
+
+/* Mobile action buttons group */
+.mobile-action-buttons {
+  display: none;
+}
+
 /* Mobile menu styles */
 @media (max-width: 1024px) {
   .hamburger-menu {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 10001;
+  }
+
+  .mobile-menu-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
   }
 
   .header-actions {
     position: fixed;
-    top: 60px;
+    top: 0;
     right: -100%;
     width: 280px;
-    height: calc(100vh - 60px);
+    height: 100vh;
     background: #121212;
     border-left: 1px solid #282828;
     flex-direction: column;
-    gap: 16px;
-    padding: 24px 16px;
-    transition: right 0.3s ease;
+    align-items: center;
+    gap: 12px;
+    padding: 80px 20px 24px 20px;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10000;
     overflow-y: auto;
-    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.5);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.6);
   }
 
   .header-actions.mobile-open {
     right: 0;
   }
 
-  .header-actions > * {
-    width: 100%;
-  }
-
-  .kofi-button-header,
-  .info-button,
-  .language-toggle,
-  .theme-toggle,
-  .login-button {
-    width: 100%;
+  /* Info button - circular */
+  .info-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
 
-  .user-menu-container {
-    width: 100%;
+  /* Language button - circular */
+  .language-menu-container {
+    width: auto;
   }
 
-  .user-info-button {
-    width: 100%;
+  .language-toggle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
     justify-content: center;
+  }
+
+  .language-toggle .flag-icon {
+    width: 30px;
+    height: 30px;
   }
 
   .language-dropdown-menu {
     position: static;
-    width: 100%;
+    width: 240px;
     margin-top: 8px;
+    box-shadow: none;
+    border: 1px solid #282828;
+    border-radius: 8px;
   }
 
+  /* Grupo de botones de acción */
+  .mobile-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #282828;
+  }
+
+  .mobile-action-buttons .kofi-button-header {
+    width: 100%;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+
+  .mobile-action-buttons .theme-toggle {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .mobile-action-buttons .login-button {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    padding: 12px 16px;
+  }
+
+  .mobile-action-buttons .user-info-button {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    padding: 10px 16px;
+  }
+
+  .mobile-action-buttons .user-avatar,
+  .mobile-action-buttons .user-avatar-placeholder {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  /* User dropdown en móvil */
   .user-dropdown-menu {
     position: static;
     width: 100%;
     margin-top: 8px;
+    min-width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    border: 1px solid #282828;
+    border-radius: 8px;
+  }
+
+  /* Scrollbar para el menú móvil */
+  .header-actions::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .header-actions::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .header-actions::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  .header-actions::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -651,6 +761,21 @@ body {
   max-width: 60px;
 }
 
+/* Botón flotante para abrir panel en móvil */
+.mobile-info-toggle {
+  display: none;
+}
+
+/* Botón de cerrar panel en móvil */
+.mobile-info-close {
+  display: none;
+}
+
+/* Overlay oscuro para móvil */
+.mobile-info-overlay {
+  display: none;
+}
+
 /* Responsive para panel de información */
 @media (max-width: 1366px) {
   .info-panel-overlay {
@@ -670,33 +795,143 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* Botón flotante visible en móvil */
+  .mobile-info-toggle {
+    display: flex;
+    position: fixed;
+    top: 80px;
+    right: 16px;
+    z-index: 600;
+    background: rgba(18, 18, 18, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(29, 185, 84, 0.3);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #1DB954;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .mobile-info-toggle:hover {
+    background: rgba(29, 185, 84, 0.15);
+    border-color: #1DB954;
+    transform: scale(1.08);
+    box-shadow: 0 6px 16px rgba(29, 185, 84, 0.4);
+  }
+
+  .mobile-info-toggle:active {
+    transform: scale(0.95);
+  }
+
+  /* Overlay oscuro */
+  .mobile-info-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 599;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* Panel de información como sidebar en móvil */
   .info-panel-overlay {
-    top: 10px;
-    right: 10px;
-    max-width: 300px;
-    min-width: 280px;
-    padding: 14px;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 380px;
+    min-width: unset;
+    height: 100vh;
+    max-height: 100vh;
+    padding: 24px 20px;
+    padding-top: 70px;
+    border-radius: 0;
+    border-left: 1px solid rgba(29, 185, 84, 0.3);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 600;
     font-size: 0.9rem;
-    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+  }
+
+  .info-panel-overlay.mobile-open {
+    right: 0;
+  }
+
+  /* Botón de cerrar visible en móvil */
+  .mobile-info-close {
+    display: flex;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    transition: all 0.2s ease;
+    z-index: 10;
+  }
+
+  .mobile-info-close:hover {
+    background: rgba(226, 33, 52, 0.2);
+    border-color: #e22134;
+    color: #e22134;
+    transform: scale(1.08);
+  }
+
+  .mobile-info-close:active {
+    transform: scale(0.95);
   }
 
   .info-panel-overlay h2 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
   }
 
   .kofi-goals-header {
-    padding: 8px 10px;
-    margin-top: 12px;
+    padding: 10px 12px;
+    margin-top: 16px;
   }
 
   .kofi-goal {
-    padding: 8px;
-    margin-top: 8px;
+    padding: 10px;
+    margin-top: 10px;
   }
 
   .goal-description {
-    font-size: 0.65rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-info-toggle {
+    width: 44px;
+    height: 44px;
+    top: 75px;
+    right: 12px;
+  }
+
+  .info-panel-overlay {
+    width: 90%;
+    max-width: 100%;
+    padding: 20px 16px;
+    padding-top: 65px;
+  }
+
+  .info-panel-overlay h2 {
+    font-size: 1.2rem;
   }
 }
 
@@ -1046,17 +1281,18 @@ body {
   }
 
   .app-header {
-    padding: 8px 16px;
+    padding: 10px 16px;
   }
 
   .header-content {
-    flex-wrap: wrap;
-    gap: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
   }
 
   .logo-section {
-    flex: 1;
-    min-width: 200px;
+    flex: 0 1 auto;
   }
 
   .logo-container {
@@ -1064,46 +1300,52 @@ body {
   }
 
   .logo-image {
-    height: 38px;
+    height: 40px;
   }
 
   .logo-subtitle {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     letter-spacing: 0.5px;
   }
 
+  /* El menú ya está configurado en el media query de 1024px */
   .header-actions {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .kofi-button-header {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-  }
-
-  .info-button,
-  .language-toggle {
-    width: 36px;
-    height: 36px;
+    width: 280px;
   }
 }
 
 @media (max-width: 480px) {
+  .app-header {
+    padding: 8px 12px;
+  }
+
   .header-content {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    text-align: center;
+  }
+
+  .logo-section {
+    flex: 1;
+  }
+
+  .logo-image {
+    height: 36px;
   }
 
   .logo-subtitle {
     display: none;
   }
 
+  .hamburger-menu {
+    width: 40px;
+    height: 40px;
+  }
+
   .header-actions {
-    width: 100%;
-    justify-content: center;
+    width: 85%;
+    max-width: 280px;
   }
 }
 
@@ -1230,20 +1472,88 @@ body {
 
 @media (max-width: 768px) {
   .app-footer {
-    padding: 20px 16px;
+    padding: 12px 16px;
   }
 
   .footer-content {
-    font-size: 0.8rem;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .footer-left {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .footer-left .separator {
+    display: none;
+  }
+
+  .powered-by-section {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.7rem;
+  }
+
+  .footer-copy {
+    font-size: 0.7rem;
   }
 
   .footer-links {
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    justify-content: center;
   }
 
   .footer-links .separator {
     display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-footer {
+    padding: 10px 12px;
+  }
+
+  .footer-content {
+    font-size: 0.7rem;
+    gap: 6px;
+  }
+
+  .footer-left p {
+    font-size: 0.7rem;
+  }
+
+  .powered-by-section {
+    font-size: 0.65rem;
+    gap: 3px;
+  }
+
+  .service-text {
+    font-size: 0.65rem;
+  }
+
+  .footer-copy {
+    font-size: 0.65rem;
+  }
+
+  .footer-links {
+    gap: 6px 10px;
+  }
+
+  .footer-links a,
+  .footer-link-button {
+    font-size: 0.7rem;
+  }
+
+  .footer-links svg {
+    width: 14px;
+    height: 14px;
   }
 }
 

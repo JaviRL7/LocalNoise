@@ -32,6 +32,7 @@ function App() {
   const [infoPanelCollapsed, setInfoPanelCollapsed] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showDeveloperModal, setShowDeveloperModal] = useState(false);
+  const [showMobileInfoPanel, setShowMobileInfoPanel] = useState(false);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -170,6 +171,7 @@ function App() {
 
   const handleAddBandClick = () => {
     if (!user) {
+      setError('');
       setShowAuth(true);
       setAuthMode('login');
     } else {
@@ -225,6 +227,7 @@ function App() {
 
   const toggleClickToAddMode = () => {
     if (!user) {
+      setError('');
       setShowAuth(true);
       setAuthMode('login');
     } else {
@@ -303,7 +306,10 @@ function App() {
           {/* Hamburger Menu Button */}
           <button
             className="hamburger-menu"
-            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowMobileMenu(!showMobileMenu);
+            }}
             aria-label="Menu"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -322,19 +328,15 @@ function App() {
             </svg>
           </button>
 
+          {/* Overlay oscuro cuando el menú está abierto */}
+          {showMobileMenu && (
+            <div
+              className="mobile-menu-overlay"
+              onClick={() => setShowMobileMenu(false)}
+            />
+          )}
+
           <div className={`header-actions ${showMobileMenu ? 'mobile-open' : ''}`}>
-            <a
-              href="https://ko-fi.com/javi_r0dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="kofi-button-header"
-              title="Support LocalNoise"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
-              </svg>
-              Ko-fi
-            </a>
             <button
               onClick={() => { setShowOnboarding(true); setShowMobileMenu(false); }}
               className="info-button"
@@ -346,7 +348,10 @@ function App() {
             </button>
             <div className="language-menu-container">
               <button
-                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowLanguageMenu(!showLanguageMenu);
+                }}
                 className="language-toggle"
                 title={currentLanguage?.name}
               >
@@ -362,7 +367,10 @@ function App() {
                   {languageOptions.map(lang => (
                     <button
                       key={lang.code}
-                      onClick={() => handleLanguageChange(lang.code)}
+                      onClick={() => {
+                        handleLanguageChange(lang.code);
+                        setShowMobileMenu(false);
+                      }}
                       className={`language-option ${language === lang.code ? 'active' : ''}`}
                     >
                       <img
@@ -381,91 +389,107 @@ function App() {
                 </div>
               )}
             </div>
-            <button
-              onClick={() => { setDarkMode(!darkMode); setShowMobileMenu(false); }}
-              className="theme-toggle"
-              title={darkMode ? t.header.lightMode : t.header.darkMode}
-            >
-              {darkMode ? 'Light' : 'Dark'}
-            </button>
-            {user ? (
-              <div className="user-menu-container">
-                <button onClick={toggleUserMenu} className="user-info-button">
-                  {user.profilePhoto ? (
-                    <img
-                      src={user.profilePhoto}
-                      alt={user.username}
-                      className="user-avatar"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        e.target.nextSibling.style.display = 'flex';
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className="user-avatar-placeholder"
-                    style={{ display: user.profilePhoto ? 'none' : 'flex' }}
-                  >
-                    {user.username.charAt(0).toUpperCase()}
-                  </div>
-                  <span>{user.username}</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ transform: showUserMenu ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
-                    <path d="M7 10l5 5 5-5z"/>
-                  </svg>
-                </button>
 
-                {showUserMenu && (
-                  <div className="user-dropdown-menu">
-                    <div className="user-menu-header">
-                      <h3>{t.header.myBands} ({userBands.length})</h3>
-                    </div>
-                    <div className="user-bands-list">
-                      {userBands.length === 0 ? (
-                        <p className="no-bands-message">{t.header.noBands}</p>
-                      ) : (
-                        userBands.map(band => (
-                          <div key={band.id} className="user-band-item">
-                            <div className="user-band-info">
-                              {band.spotifyImageUrl && (
-                                <img src={band.spotifyImageUrl} alt={band.name} className="band-thumb" />
-                              )}
-                              <div className="band-details">
-                                <h4>{band.name}</h4>
-                                <p>{band.city}, {band.country}</p>
-                              </div>
-                            </div>
-                            <div className="band-actions-menu">
-                              <button onClick={() => { handleEditBand(band); setShowUserMenu(false); }} className="band-action-btn edit">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                                </svg>
-                              </button>
-                              <button onClick={() => { handleDeleteBand(band.id); setShowUserMenu(false); }} className="band-action-btn delete">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                    <div className="user-menu-footer">
-                      <button onClick={() => { handleLogout(); setShowUserMenu(false); }} className="logout-menu-button">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-                        </svg>
-                        {t.header.logout}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button onClick={() => { setShowAuth(true); setAuthMode('login'); setShowMobileMenu(false); }} className="login-button">
-                {t.header.login}
+            {/* Grupo de botones de acción */}
+            <div className="mobile-action-buttons">
+              <a
+                href="https://ko-fi.com/javi_r0dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="kofi-button-header"
+                title="Support LocalNoise"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
+                </svg>
+                Ko-fi
+              </a>
+              <button
+                onClick={() => { setDarkMode(!darkMode); setShowMobileMenu(false); }}
+                className="theme-toggle"
+                title={darkMode ? t.header.lightMode : t.header.darkMode}
+              >
+                {darkMode ? 'Light' : 'Dark'}
               </button>
-            )}
+              {user ? (
+                <>
+                  <button onClick={toggleUserMenu} className="user-info-button">
+                    {user.profilePhoto ? (
+                      <img
+                        src={user.profilePhoto}
+                        alt={user.username}
+                        className="user-avatar"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div
+                      className="user-avatar-placeholder"
+                      style={{ display: user.profilePhoto ? 'none' : 'flex' }}
+                    >
+                      {user.username.charAt(0).toUpperCase()}
+                    </div>
+                    <span>{user.username}</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ transform: showUserMenu ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}>
+                      <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                  </button>
+                  {showUserMenu && (
+                    <div className="user-dropdown-menu">
+                <div className="user-menu-header">
+                  <h3>{t.header.myBands} ({userBands.length})</h3>
+                </div>
+                <div className="user-bands-list">
+                  {userBands.length === 0 ? (
+                    <p className="no-bands-message">{t.header.noBands}</p>
+                  ) : (
+                    userBands.map(band => (
+                      <div key={band.id} className="user-band-item">
+                        <div className="user-band-info">
+                          {band.spotifyImageUrl && (
+                            <img src={band.spotifyImageUrl} alt={band.name} className="band-thumb" />
+                          )}
+                          <div className="band-details">
+                            <h4>{band.name}</h4>
+                            <p>{band.city}, {band.country}</p>
+                          </div>
+                        </div>
+                        <div className="band-actions-menu">
+                          <button onClick={() => { handleEditBand(band); setShowUserMenu(false); setShowMobileMenu(false); }} className="band-action-btn edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                            </svg>
+                          </button>
+                          <button onClick={() => { handleDeleteBand(band.id); setShowUserMenu(false); setShowMobileMenu(false); }} className="band-action-btn delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="user-menu-footer">
+                  <button onClick={() => { handleLogout(); setShowUserMenu(false); setShowMobileMenu(false); }} className="logout-menu-button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                    </svg>
+                    {t.header.logout}
+                  </button>
+                </div>
+              </div>
+                    )}
+                  </>
+              ) : (
+                <button onClick={() => { setError(''); setShowAuth(true); setAuthMode('login'); setShowMobileMenu(false); }} className="login-button">
+                  {t.header.login}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -479,7 +503,7 @@ function App() {
           darkMode={darkMode}
           user={user}
           onAddBandClick={handleAddBandClick}
-          onShowAuth={() => { setShowAuth(true); setAuthMode('login'); }}
+          onShowAuth={() => { setError(''); setShowAuth(true); setAuthMode('login'); }}
           onEditBand={handleEditBand}
           onDeleteBand={handleDeleteBand}
           translations={t.map}
@@ -488,7 +512,38 @@ function App() {
           onToggleClickToAdd={toggleClickToAddMode}
         />
 
-        <div className="info-panel-overlay">
+        {/* Botón flotante para abrir panel de info en móvil */}
+        <button
+          className="mobile-info-toggle"
+          onClick={() => setShowMobileInfoPanel(true)}
+          aria-label="Info"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+          </svg>
+        </button>
+
+        {/* Overlay oscuro cuando el panel está abierto en móvil */}
+        {showMobileInfoPanel && (
+          <div
+            className="mobile-info-overlay"
+            onClick={() => setShowMobileInfoPanel(false)}
+          />
+        )}
+
+        <div className={`info-panel-overlay ${showMobileInfoPanel ? 'mobile-open' : ''}`}>
+          {/* Botón para cerrar en móvil */}
+          <button
+            className="mobile-info-close"
+            onClick={() => setShowMobileInfoPanel(false)}
+            aria-label="Cerrar"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
           <h2>{t.info.title}</h2>
           <p>{t.info.totalBands} <strong>{bands.length}</strong></p>
           <p>{t.info.countriesRepresented} <strong>{new Set(bands.map(b => b.country)).size}</strong></p>
