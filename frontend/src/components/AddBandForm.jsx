@@ -448,6 +448,11 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
         translations={{
           title: translations.socialMediaModal?.title || '¿Agregar redes sociales?',
           description: translations.socialMediaModal?.description || 'Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.',
+          descriptionPart1: translations.socialMediaModal?.descriptionPart1,
+          descriptionHighlight1: translations.socialMediaModal?.descriptionHighlight1,
+          descriptionPart2: translations.socialMediaModal?.descriptionPart2,
+          descriptionHighlight2: translations.socialMediaModal?.descriptionHighlight2,
+          descriptionPart3: translations.socialMediaModal?.descriptionPart3,
           instagram: translations.instagram || 'Instagram',
           twitter: translations.twitter || 'X / Twitter',
           tiktok: translations.tiktok || 'TikTok',
