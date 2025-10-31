@@ -86,7 +86,8 @@ export const translations = {
         noResults: "No se encontraron resultados",
         selectArtist: "Seleccionar",
         minCharsError: "Escribe al menos 2 caracteres",
-        urlError: "Pega la URL de Spotify del artista"
+        urlError: "Pega la URL de Spotify del artista",
+        tip: "Para bandas pequeñas, igual es necesario pegar la URL de Spotify"
       },
       socialMediaModal: {
         title: "Agregar redes sociales",
@@ -259,7 +260,8 @@ export const translations = {
         noResults: "No results found",
         selectArtist: "Select",
         minCharsError: "Type at least 2 characters",
-        urlError: "Paste the Spotify URL of the artist"
+        urlError: "Paste the Spotify URL of the artist",
+        tip: "For small bands, you may need to paste the Spotify URL"
       },
       socialMediaModal: {
         title: "Add social media",

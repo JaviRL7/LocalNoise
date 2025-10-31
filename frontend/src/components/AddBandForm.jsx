@@ -214,13 +214,13 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
         <form onSubmit={handleSubmit} className="add-band-form">
           {error && <div className="error-message">{error}</div>}
 
-          {!isEditMode && <SpotifySearch onSelectArtist={handleSpotifyArtistSelect} />}
+          {!isEditMode && <SpotifySearch onSelectArtist={handleSpotifyArtistSelect} translations={translations.spotifySearch} />}
 
           {/* Nota informativa sobre búsqueda por URL */}
           {!isEditMode && (
             <div className="search-tip">
               <Info size={14} />
-              <span>Para bandas pequeñas, igual es necesario pegar la URL de Spotify</span>
+              <span>{translations.spotifySearch?.tip || 'Para bandas pequeñas, igual es necesario pegar la URL de Spotify'}</span>
             </div>
           )}
 
