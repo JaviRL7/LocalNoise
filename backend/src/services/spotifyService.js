@@ -133,6 +133,49 @@ class SpotifyService {
   }
 
   /**
+   * Extrae el ID del artista de una URL de Spotify
+   * @param {string} url - URL de Spotify (ej: https://open.spotify.com/artist/1234)
+   * @returns {string|null} - ID del artista o null si no es válida
+   */
+  extractArtistIdFromUrl(url) {
+    try {
+      // Patrones de URL de Spotify para artistas
+      // Soporta URLs con internacionalización: /intl-XX/
+      // Soporta query params: ?si=...
+      const patterns = [
+        /spotify\.com\/(?:intl-[a-z]{2}\/)?artist\/([a-zA-Z0-9]+)/i,  // URLs web con/sin intl
+        /spotify:artist:([a-zA-Z0-9]+)/  // URIs de Spotify
+      ];
+
+      for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+          return match[1];
+        }
+      }
+
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  /**
+   * Busca un artista por URL de Spotify
+   * @param {string} url - URL del artista en Spotify
+   * @returns {Object} - Información del artista
+   */
+  async getArtistByUrl(url) {
+    const artistId = this.extractArtistIdFromUrl(url);
+
+    if (!artistId) {
+      throw new Error('URL de Spotify no válida. Usa el formato: https://open.spotify.com/artist/...');
+    }
+
+    return await this.getArtist(artistId);
+  }
+
+  /**
    * Obtiene información completa de un artista
    * @param {string} artistId - ID del artista en Spotify
    * @returns {Object} - Información del artista

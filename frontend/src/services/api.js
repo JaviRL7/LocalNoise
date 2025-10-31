@@ -42,8 +42,11 @@ export const bandService = {
 
 // Servicios de Spotify
 export const spotifyService = {
-  searchArtists: (query, limit = 10) => api.get('/spotify/search', {
+  searchArtists: (query, limit = 15) => api.get('/spotify/search', {
     params: { q: query, limit }
+  }),
+  searchByUrl: (url) => api.get('/spotify/search-by-url', {
+    params: { url }
   }),
   getArtist: (artistId) => api.get(`/spotify/artists/${artistId}`),
   getTopTracks: (artistId, market = 'US') => api.get(`/spotify/artists/${artistId}/top-tracks`, {

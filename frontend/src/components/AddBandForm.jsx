@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { bandService } from '../services/api';
 import SpotifySearch from './SpotifySearch';
 import SocialMediaModal from './SocialMediaModal';
+import { Search, MapPin, Users, Share2, CheckCircle, Info } from 'lucide-react';
 import '../styles/AddBandForm.css';
 
 function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onClose, translations }) {
@@ -29,6 +30,8 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
   const [loading, setLoading] = useState(false);
   const [selectedSpotifyArtist, setSelectedSpotifyArtist] = useState(null);
   const [showSocialMediaModal, setShowSocialMediaModal] = useState(false);
+  const [missingGenre, setMissingGenre] = useState(false);
+  const [createdBand, setCreatedBand] = useState(null);
 
   // Pre-fill form when editing
   useEffect(() => {
@@ -72,6 +75,12 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    // Limpiar error de género cuando el usuario empieza a escribir
+    if (name === 'genre' && missingGenre) {
+      setMissingGenre(false);
+      setError('');
+    }
   };
 
   const handleSpotifyArtistSelect = (artist) => {
@@ -103,17 +112,36 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setMissingGenre(false);
     setLoading(true);
+
+    // Validación específica del género
+    if (!formData.genre || formData.genre.trim() === '') {
+      setMissingGenre(true);
+      setLoading(false);
+      // Scroll al campo de género
+      setTimeout(() => {
+        const genreInput = document.querySelector('input[name="genre"]');
+        if (genreInput) {
+          genreInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          genreInput.focus();
+        }
+      }, 100);
+      return;
+    }
 
     try {
       if (isEditMode) {
         const response = await bandService.update(band.id, formData);
         onBandUpdated(response.data);
+        onClose();
       } else {
         const response = await bandService.create(formData);
+        setCreatedBand(response.data);
         onBandAdded(response.data);
+        // Mostrar modal de redes sociales después de crear
+        setShowSocialMediaModal(true);
       }
-      onClose();
     } catch (err) {
       setError(err.response?.data?.error || `Error al ${isEditMode ? 'actualizar' : 'agregar'} la banda`);
     } finally {
@@ -150,13 +178,29 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
     }
   };
 
-  const handleSaveSocialMedia = (socialData) => {
-    setFormData(prev => ({
-      ...prev,
-      instagramUrl: socialData.instagramUrl,
-      twitterUrl: socialData.twitterUrl,
-      tiktokUrl: socialData.tiktokUrl
-    }));
+  const handleSaveSocialMedia = async (socialData) => {
+    if (createdBand) {
+      // Actualizar la banda recién creada con las redes sociales
+      try {
+        await bandService.update(createdBand.id, {
+          ...createdBand,
+          instagramUrl: socialData.instagramUrl,
+          twitterUrl: socialData.twitterUrl,
+          tiktokUrl: socialData.tiktokUrl
+        });
+        onClose();
+      } catch (err) {
+        console.error('Error actualizando redes sociales:', err);
+        onClose();
+      }
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        instagramUrl: socialData.instagramUrl,
+        twitterUrl: socialData.twitterUrl,
+        tiktokUrl: socialData.tiktokUrl
+      }));
+    }
   };
 
   return (
@@ -171,6 +215,14 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
           {error && <div className="error-message">{error}</div>}
 
           {!isEditMode && <SpotifySearch onSelectArtist={handleSpotifyArtistSelect} />}
+
+          {/* Nota informativa sobre búsqueda por URL */}
+          {!isEditMode && (
+            <div className="search-tip">
+              <Info size={14} />
+              <span>Para bandas pequeñas, igual es necesario pegar la URL de Spotify</span>
+            </div>
+          )}
 
           {/* Nombre de banda - oculto solo si viene de Spotify en modo click-to-add */}
           {!(initialCoordinates && !isEditMode && selectedSpotifyArtist) && (
@@ -191,160 +243,169 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
             <input type="hidden" name="name" value={formData.name} />
           )}
 
-          {/* Ubicación y coordenadas */}
-          <div className="form-row">
-            <div className="form-group">
-              <label>{translations.city}</label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                required
-                placeholder="Sanlúcar de Barrameda"
-              />
-            </div>
-
-            <div className="form-group">
-              <label>{translations.country}</label>
-              <input
-                type="text"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                required
-                placeholder="España"
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>{translations.latitude}</label>
-              <div className="number-input-wrapper">
-                <input
-                  type="number"
-                  step="any"
-                  name="latitude"
-                  value={formData.latitude}
-                  onChange={handleChange}
-                  required
-                  placeholder="36.7780"
-                />
-                <div className="number-controls">
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      latitude: prev.latitude ? (parseFloat(prev.latitude) + 0.1).toFixed(6) : '0.1'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 14l5-5 5 5z"/>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      latitude: prev.latitude ? (parseFloat(prev.latitude) - 0.1).toFixed(6) : '-0.1'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>{translations.longitude}</label>
-              <div className="number-input-wrapper">
-                <input
-                  type="number"
-                  step="any"
-                  name="longitude"
-                  value={formData.longitude}
-                  onChange={handleChange}
-                  required
-                  placeholder="-6.3526"
-                />
-                <div className="number-controls">
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      longitude: prev.longitude ? (parseFloat(prev.longitude) + 0.1).toFixed(6) : '0.1'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 14l5-5 5 5z"/>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    className="number-control-btn"
-                    onClick={() => setFormData(prev => ({
-                      ...prev,
-                      longitude: prev.longitude ? (parseFloat(prev.longitude) - 0.1).toFixed(6) : '-0.1'
-                    }))}
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={searchLocation}
-              className="search-button"
-            >
-              {translations.searchCoordinates}
-            </button>
-          </div>
-
-          {/* Campos opcionales - siempre visibles */}
-          <div className="form-row">
-            <div className="form-group">
-              <label>{translations.genre}</label>
-              <input
-                type="text"
-                name="genre"
-                value={formData.genre}
-                onChange={handleChange}
-                placeholder="Rock, Metal, Punk, etc."
-              />
-            </div>
-          </div>
-
-          {/* Botón para agregar redes sociales (opcional) */}
-          <div className="social-media-section">
-            <button
-              type="button"
-              onClick={() => setShowSocialMediaModal(true)}
-              className="add-social-button"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-              </svg>
-              {translations.addSocialMedia || 'Agregar redes sociales (opcional)'}
-            </button>
-            {(formData.instagramUrl || formData.twitterUrl || formData.tiktokUrl) && (
-              <div className="social-media-added">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          {/* Género musical */}
+          <div className={`form-group ${missingGenre ? 'field-error' : ''}`}>
+            <label>{translations.genre} {missingGenre && <span className="required-indicator">*</span>}</label>
+            <input
+              type="text"
+              name="genre"
+              value={formData.genre}
+              onChange={handleChange}
+              placeholder="Rock, Metal, Punk..."
+              className={missingGenre ? 'input-error' : ''}
+            />
+            {missingGenre && (
+              <div className="field-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
-                <span>{translations.socialMediaAdded || 'Redes sociales agregadas'}</span>
+                <span>Este campo es obligatorio. Spotify no siempre proporciona esta información.</span>
               </div>
             )}
           </div>
+
+          {/* Ubicación - editable en modo edición, solo lectura en modo agregar */}
+          {isEditMode ? (
+            <>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>{translations.city}</label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    placeholder="Sanlúcar de Barrameda"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{translations.country}</label>
+                  <input
+                    type="text"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleChange}
+                    required
+                    placeholder="España"
+                  />
+                </div>
+              </div>
+
+              <div className="coordinates-search-section">
+                <button
+                  type="button"
+                  onClick={searchLocation}
+                  className="search-coords-button-edit"
+                  title={translations.searchCoordinates}
+                >
+                  <Search size={16} />
+                  <span>{translations.searchCoordinates}</span>
+                </button>
+                <p className="coords-help-text">
+                  <Info size={18} />
+                  <span>{translations.automaticSearch}</span>
+                </p>
+              </div>
+
+              <div className="coordinates-row">
+                <div className="form-group">
+                  <label>{translations.latitude}</label>
+                  <input
+                    type="number"
+                    step="any"
+                    name="latitude"
+                    value={formData.latitude}
+                    onChange={handleChange}
+                    required
+                    placeholder="36.7780"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>{translations.longitude}</label>
+                  <input
+                    type="number"
+                    step="any"
+                    name="longitude"
+                    value={formData.longitude}
+                    onChange={handleChange}
+                    required
+                    placeholder="-6.3526"
+                  />
+                </div>
+              </div>
+
+              <div className="map-manual-selection">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="map-select-button"
+                  title={translations.selectOnMap}
+                >
+                  <MapPin size={18} />
+                  <span>{translations.selectOnMap}</span>
+                </button>
+                <p className="map-help-text">
+                  <Info size={18} />
+                  <span>{translations.clickMapHint}</span>
+                </p>
+              </div>
+            </>
+          ) : (
+            <div className="location-info">
+              <label className="location-info-label">Ubicación seleccionada en el mapa:</label>
+              <div className="location-info-grid">
+                <div className="location-info-item">
+                  <span className="location-info-key">Ciudad:</span>
+                  <span className="location-info-value">{formData.city || '-'}</span>
+                </div>
+                <div className="location-info-item">
+                  <span className="location-info-key">País:</span>
+                  <span className="location-info-value">{formData.country || '-'}</span>
+                </div>
+                <div className="location-info-item">
+                  <span className="location-info-key">Lat:</span>
+                  <span className="location-info-value">{formData.latitude || '-'}</span>
+                </div>
+                <div className="location-info-item">
+                  <span className="location-info-key">Lon:</span>
+                  <span className="location-info-value">{formData.longitude || '-'}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sección de redes sociales - solo en modo edición */}
+          {isEditMode && (
+            <div className="social-media-edit-section">
+              <div className="social-media-header">
+                <Users size={28} />
+                <div>
+                  <h3>{translations.socialMedia}</h3>
+                  <p className="social-media-subtitle">{translations.socialMediaSubtitle}</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSocialMediaModal(true)}
+                className="edit-social-button"
+              >
+                <Share2 size={18} />
+                <span>{(formData.instagramUrl || formData.twitterUrl || formData.tiktokUrl) ? translations.editSocialMedia : translations.addSocialMedia}</span>
+              </button>
+              {(formData.instagramUrl || formData.twitterUrl || formData.tiktokUrl) && (
+                <div className="social-media-added-indicator">
+                  <CheckCircle size={15} />
+                  <span>{translations.socialMediaConfigured}</span>
+                </div>
+              )}
+            </div>
+          )}
+
 
           <div className="form-group checkbox-group">
             <label>
@@ -375,7 +436,13 @@ function AddBandForm({ band, initialCoordinates, onBandAdded, onBandUpdated, onC
       {/* Modal de redes sociales */}
       <SocialMediaModal
         isOpen={showSocialMediaModal}
-        onClose={() => setShowSocialMediaModal(false)}
+        onClose={() => {
+          setShowSocialMediaModal(false);
+          if (createdBand) {
+            // Si ya creamos la banda, cerrar todo el formulario
+            onClose();
+          }
+        }}
         onSave={handleSaveSocialMedia}
         initialData={{ instagramUrl: formData.instagramUrl, twitterUrl: formData.twitterUrl, tiktokUrl: formData.tiktokUrl }}
         translations={{

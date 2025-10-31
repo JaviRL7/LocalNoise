@@ -4,31 +4,55 @@ import '../styles/SpotifySearch.css';
 
 function SpotifySearch({ onSelectArtist }) {
   const [searchQuery, setSearchQuery] = useState('');
+  const [spotifyUrl, setSpotifyUrl] = useState('');
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
   const [selectedArtist, setSelectedArtist] = useState(null);
+  const [searchMode, setSearchMode] = useState('name'); // 'name' o 'url'
 
   const handleSearch = async (e) => {
     e.preventDefault();
 
-    if (searchQuery.trim().length < 2) {
-      setError('Escribe al menos 2 caracteres');
-      return;
+    if (searchMode === 'name') {
+      if (searchQuery.trim().length < 2) {
+        setError('Escribe al menos 2 caracteres');
+        return;
+      }
+    } else {
+      if (!spotifyUrl.trim()) {
+        setError('Pega la URL de Spotify del artista');
+        return;
+      }
     }
 
     setSearching(true);
     setError('');
 
     try {
-      const response = await spotifyService.searchArtists(searchQuery, 5);
-      setResults(response.data.artists);
+      if (searchMode === 'url') {
+        // Búsqueda por URL
+        const response = await spotifyService.searchByUrl(spotifyUrl);
+        const artist = response.data.artist;
+        // Seleccionar directamente el artista
+        setSelectedArtist(artist);
+        onSelectArtist(artist);
+        setResults([]);
+      } else {
+        // Búsqueda por nombre
+        const response = await spotifyService.searchArtists(searchQuery, 15);
+        setResults(response.data.artists);
 
-      if (response.data.artists.length === 0) {
-        setError('No se encontraron artistas en Spotify');
+        if (response.data.artists.length === 0) {
+          setError('No se encontraron artistas en Spotify');
+        }
       }
     } catch (err) {
-      setError('Error al buscar en Spotify. Puedes agregar la banda manualmente.');
+      if (searchMode === 'url') {
+        setError('URL de Spotify no válida. Asegúrate de copiar la URL completa del artista.');
+      } else {
+        setError('Error al buscar en Spotify. Puedes agregar la banda manualmente.');
+      }
       console.error('Error searching Spotify:', err);
     } finally {
       setSearching(false);
@@ -61,25 +85,71 @@ function SpotifySearch({ onSelectArtist }) {
         </svg>
         <h3>Buscar en Spotify</h3>
       </div>
+
+      {/* Toggle entre búsqueda por nombre y URL */}
+      <div className="search-mode-toggle">
+        <button
+          type="button"
+          className={searchMode === 'name' ? 'active' : ''}
+          onClick={() => {
+            setSearchMode('name');
+            setError('');
+          }}
+        >
+          Buscar por nombre
+        </button>
+        <button
+          type="button"
+          className={searchMode === 'url' ? 'active' : ''}
+          onClick={() => {
+            setSearchMode('url');
+            setError('');
+          }}
+        >
+          Pegar URL de Spotify
+        </button>
+      </div>
+
       <div className="search-form">
-        <div className="search-input-group">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Buscar banda en Spotify..."
-            className="search-input"
-          />
-          <button
-            type="button"
-            onClick={handleSearch}
-            disabled={searching || searchQuery.trim().length < 2}
-            className="search-button-spotify"
-          >
-            {searching ? 'Buscando...' : 'Buscar'}
-          </button>
-        </div>
+        {searchMode === 'name' ? (
+          <div className="search-input-group">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Buscar banda en Spotify..."
+              className="search-input"
+            />
+            <button
+              type="button"
+              onClick={handleSearch}
+              disabled={searching || searchQuery.trim().length < 2}
+              className="search-button-spotify"
+            >
+              {searching ? 'Buscando...' : 'Buscar'}
+            </button>
+          </div>
+        ) : (
+          <div className="search-input-group">
+            <input
+              type="text"
+              value={spotifyUrl}
+              onChange={(e) => setSpotifyUrl(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="https://open.spotify.com/artist/..."
+              className="search-input"
+            />
+            <button
+              type="button"
+              onClick={handleSearch}
+              disabled={searching || !spotifyUrl.trim()}
+              className="search-button-spotify"
+            >
+              {searching ? 'Buscando...' : 'Buscar'}
+            </button>
+          </div>
+        )}
       </div>
 
       {error && (

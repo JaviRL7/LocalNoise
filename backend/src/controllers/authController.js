@@ -97,12 +97,12 @@ exports.getProfile = async (req, res) => {
 exports.googleCallback = async (req, res) => {
   try {
     const user = req.user;
-    
+
     if (!user) {
       console.error('No user in request');
-      return res.redirect(`${process.env.FRONTEND_URL}?error=google_auth_failed`);
+      return res.redirect(`${getFrontendUrl()}?error=google_auth_failed`);
     }
-    
+
     const token = generateToken(user.id);
     const userData = {
       id: user.id,
@@ -112,13 +112,27 @@ exports.googleCallback = async (req, res) => {
       country: user.country,
       profilePhoto: user.profilePhoto
     };
-    
-    const redirectUrl = `${process.env.FRONTEND_URL}?token=${token}&user=${encodeURIComponent(JSON.stringify(userData))}`;
+
+    const frontendUrl = getFrontendUrl();
+    const redirectUrl = `${frontendUrl}?token=${token}&user=${encodeURIComponent(JSON.stringify(userData))}`;
     console.log('Google callback redirect to:', redirectUrl);
-    
+
     res.redirect(redirectUrl);
   } catch (error) {
     console.error('Google callback error:', error);
-    res.redirect(`${process.env.FRONTEND_URL}?error=google_auth_failed`);
+    res.redirect(`${getFrontendUrl()}?error=google_auth_failed`);
   }
 };
+
+// Helper para obtener la URL correcta del frontend según el entorno
+function getFrontendUrl() {
+  const urls = process.env.FRONTEND_URL.split(',').map(url => url.trim());
+
+  // En desarrollo, usar localhost
+  if (process.env.NODE_ENV === 'development') {
+    return urls.find(url => url.includes('localhost')) || urls[0];
+  }
+
+  // En producción, usar la URL de producción
+  return urls.find(url => !url.includes('localhost')) || urls[0];
+}

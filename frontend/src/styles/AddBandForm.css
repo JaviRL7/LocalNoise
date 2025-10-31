@@ -89,8 +89,35 @@
   padding: 32px;
 }
 
+.search-tip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 28px 0;
+  padding: 14px 18px;
+  background: rgba(29, 185, 84, 0.12);
+  border-left: 4px solid rgba(29, 185, 84, 0.6);
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.search-tip svg {
+  flex-shrink: 0;
+  color: #1DB954;
+  opacity: 0.9;
+  width: 18px;
+  height: 18px;
+}
+
+.search-tip span {
+  flex: 1;
+}
+
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 /* Margen extra para el primer campo después del buscador de Spotify */
@@ -134,6 +161,25 @@
 .form-group input::placeholder,
 .form-group textarea::placeholder {
   color: #727272;
+}
+
+/* Estilos para autocompletado del navegador - evita fondo blanco/amarillo */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: white !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #121212;
+  border-bottom: 1px solid #404040 !important;
+  background-color: transparent !important;
+}
+
+/* Para otros navegadores */
+.form-group input:autofill {
+  background-color: transparent !important;
+  color: white !important;
 }
 
 /* Ocultar las flechitas predeterminadas de los inputs number */
@@ -208,6 +254,60 @@
   border-bottom-width: 2px;
 }
 
+/* Estilos para campos con error */
+.form-group.field-error input.input-error {
+  border-bottom-color: #e22134;
+  border-bottom-width: 2px;
+  animation: shake 0.3s ease-in-out;
+}
+
+.form-group.field-error input.input-error:focus {
+  border-bottom-color: #ff6b7a;
+  box-shadow: 0 2px 8px rgba(226, 33, 52, 0.2);
+}
+
+.required-indicator {
+  color: #e22134;
+  margin-left: 4px;
+  font-weight: bold;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.field-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: rgba(226, 33, 52, 0.1);
+  border: 1px solid rgba(226, 33, 52, 0.3);
+  border-radius: 6px;
+  color: #ff6b7a;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.field-hint svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #e22134;
+}
+
+.field-hint span {
+  flex: 1;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
 .form-group input[readonly] {
   color: #808080;
   cursor: not-allowed;
@@ -231,35 +331,197 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
-.form-row.with-button {
-  grid-template-columns: 1fr 1fr auto;
-  align-items: end;
+/* Información de ubicación (solo lectura) */
+.location-info {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: rgba(40, 40, 40, 0.4);
+  border-radius: 8px;
+  border: 1px solid #282828;
 }
 
-.search-button {
-  padding: 10px 18px;
-  background: transparent;
+.location-info-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  color: #b3b3b3;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.location-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+}
+
+.location-info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-info-key {
+  font-size: 0.8rem;
+  color: #808080;
+  font-weight: 500;
+}
+
+.location-info-value {
+  font-size: 0.85rem;
+  color: #e0e0e0;
+  font-weight: 400;
+}
+
+/* Fila de coordenadas en modo edición */
+.coordinates-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Sección de búsqueda de coordenadas */
+.coordinates-search-section {
+  margin: 16px 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.coords-help-text {
+  flex: 1;
+  font-size: 0.8rem;
   color: #1DB954;
-  border: 1px solid #1DB954;
-  border-radius: 20px;
+  line-height: 1.4;
+  margin: 0 0 0 12px;
+  padding: 10px 14px;
+  font-weight: 500;
+  background: rgba(29, 185, 84, 0.08);
+  border-left: 3px solid #1DB954;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coords-help-text svg {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.coords-help-text span {
+  flex: 1;
+}
+
+.search-coords-button-edit {
+  padding: 12px 20px;
+  background: #1DB954;
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
+  width: fit-content;
+}
+
+.search-coords-button-edit:hover {
+  background: #1ed760;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(29, 185, 84, 0.4);
+}
+
+.search-coords-button-edit:active {
+  transform: translateY(0);
+}
+
+.search-coords-button-edit svg {
+  flex-shrink: 0;
+}
+
+/* Sección de selección manual en el mapa */
+.map-manual-selection {
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.map-help-text {
+  flex: 1;
+  font-size: 0.75rem;
+  color: #909090;
+  line-height: 1.3;
+  margin: 0 0 0 12px;
+  padding: 8px 12px;
+  font-weight: 500;
+  background: rgba(50, 50, 50, 0.25);
+  border-left: 2px solid #606060;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.map-help-text svg {
+  flex-shrink: 0;
+  color: #606060;
+  width: 18px;
+  height: 18px;
+}
+
+.map-help-text span {
+  flex: 1;
+}
+
+.map-select-button {
+  padding: 10px 16px;
+  background: #1f1f1f;
+  border: 1px solid #3a3a3a;
+  border-radius: 20px;
+  color: #c0c0c0;
   font-size: 0.8rem;
   font-weight: 600;
-  white-space: nowrap;
-  height: 42px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
   transition: all 0.2s ease;
-  letter-spacing: 0.3px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  width: fit-content;
 }
 
-.search-button:hover {
-  background: #1DB954;
-  color: white;
+.map-select-button:hover {
+  background: #2a2a2a;
+  border-color: #505050;
+  color: #e0e0e0;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
 }
+
+.map-select-button:active {
+  transform: translateY(0);
+}
+
+.map-select-button svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
 
 .checkbox-group label {
   display: flex;
@@ -287,66 +549,164 @@
   border-left: 4px solid #e22134;
 }
 
-/* Sección de redes sociales */
-.social-media-section {
-  margin: 20px 0;
-  padding: 16px;
-  background: rgba(29, 185, 84, 0.05);
-  border: 1px dashed rgba(29, 185, 84, 0.3);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+/* Sección de redes sociales rediseñada */
+.social-media-edit-section {
+  margin: 24px 0;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(29, 185, 84, 0.08) 0%, rgba(20, 150, 70, 0.08) 100%);
+  border: 1px solid rgba(29, 185, 84, 0.25);
+  border-left: 4px solid #1DB954;
+  border-radius: 8px;
 }
 
-.add-social-button {
+.social-media-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.social-media-header svg {
+  width: 28px;
+  height: 28px;
+  color: #1DB954;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.social-media-header > div {
+  flex: 1;
+}
+
+.social-media-header h3 {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e0e0e0;
+  letter-spacing: 0.2px;
+}
+
+.social-media-subtitle {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #1DB954;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.edit-social-button {
   width: 100%;
-  padding: 12px 20px;
-  background: transparent;
-  border: 1px solid #535353;
+  padding: 13px 22px;
+  background: linear-gradient(135deg, #1DB954 0%, #1aa34a 100%);
+  border: none;
   border-radius: 8px;
-  color: #b3b3b3;
+  color: white;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(29, 185, 84, 0.3);
+  letter-spacing: 0.2px;
+}
+
+.edit-social-button svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.edit-social-button:hover {
+  background: linear-gradient(135deg, #1ed760 0%, #1DB954 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(29, 185, 84, 0.4);
+}
+
+.edit-social-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(29, 185, 84, 0.35);
+}
+
+.social-media-added-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 7px;
+  color: #1DB954;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: rgba(29, 185, 84, 0.12);
+  border-radius: 6px;
+}
+
+.social-media-added-indicator svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* Estilos antiguos de redes sociales - mantener para compatibilidad */
+.social-media-section {
+  margin: 12px 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-social-button {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid rgba(83, 83, 83, 0.6);
+  border-radius: 16px;
+  color: #b3b3b3;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .add-social-button:hover {
-  background: #282828;
-  border-color: #1DB954;
+  background: rgba(29, 185, 84, 0.08);
+  border-color: rgba(29, 185, 84, 0.5);
   color: #1DB954;
-  transform: scale(1.01);
 }
 
 .add-social-button svg {
   flex-shrink: 0;
+  width: 14px;
+  height: 14px;
 }
 
 .social-media-added {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 5px;
   color: #1DB954;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .social-media-added svg {
   flex-shrink: 0;
+  width: 14px;
+  height: 14px;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  margin-top: 32px;
-  padding-top: 24px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid #282828;
 }
 
@@ -416,11 +776,56 @@
     grid-template-columns: 1fr;
   }
 
-  .form-row.with-button {
+  .location-info-grid {
     grid-template-columns: 1fr;
   }
 
-  .search-button {
+  .coordinates-row {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .coordinates-search-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .search-coords-button-edit {
     width: 100%;
+    justify-content: center;
+  }
+
+  .coords-help-text {
+    text-align: center;
+    margin: 0;
+  }
+
+  .map-manual-selection {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .map-select-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .map-help-text {
+    text-align: center;
+    margin: 0;
+  }
+
+  .social-media-edit-section {
+    padding: 16px;
+  }
+
+  .social-media-header h3 {
+    font-size: 1rem;
+  }
+
+  .social-media-description {
+    font-size: 0.8rem;
   }
 }

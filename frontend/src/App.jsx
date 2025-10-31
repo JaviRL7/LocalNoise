@@ -740,28 +740,28 @@ function App() {
         <div className="modal-overlay">
           <div className="modal-content confirm-location-modal">
             <div className="modal-header">
-              <h2>¿Agregar banda aquí?</h2>
+              <h2>{t.map.confirmLocation.title}</h2>
               <button onClick={handleCancelLocation} className="close-button">&times;</button>
             </div>
             <div className="confirm-location-content">
               <p className="location-info">
-                <strong>Ubicación detectada</strong>
-                {pendingLocation.city || 'Sin nombre'}, {pendingLocation.country || 'Desconocido'}
+                <strong>{t.map.confirmLocation.detectedLocation}</strong>
+                {pendingLocation.city || t.map.confirmLocation.noName}, {pendingLocation.country || t.map.confirmLocation.unknown}
               </p>
               <p className="coordinates-info">
-                <strong>Coordenadas</strong>
+                <strong>{t.map.confirmLocation.coordinates}</strong>
                 {pendingLocation.latitude}, {pendingLocation.longitude}
               </p>
               <p className="instruction-text">
-                Confirma esta ubicación para abrir el buscador de Spotify y agregar una banda en este punto del mapa.
+                {t.map.confirmLocation.instruction}
               </p>
             </div>
             <div className="form-actions">
               <button onClick={handleCancelLocation} className="cancel-button">
-                Cancelar
+                {t.map.confirmLocation.cancel}
               </button>
               <button onClick={handleConfirmLocation} className="submit-button">
-                Confirmar ubicación
+                {t.map.confirmLocation.confirm}
               </button>
             </div>
           </div>

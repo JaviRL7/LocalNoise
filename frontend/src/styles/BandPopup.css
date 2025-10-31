@@ -94,6 +94,29 @@
   font-weight: 700;
 }
 
+/* Badge de estado (Activa/Inactiva) */
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.85;
+}
+
+.status-badge.active {
+  background: rgba(29, 185, 84, 0.15);
+  color: #1DB954;
+  border: 1px solid rgba(29, 185, 84, 0.3);
+}
+
+.status-badge.inactive {
+  background: rgba(128, 128, 128, 0.15);
+  color: #808080;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+}
+
 /* REPRODUCTOR PEQUEÑO - Estilo Spotify */
 .player-section {
   background: #181818;

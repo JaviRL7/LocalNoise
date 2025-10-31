@@ -34,7 +34,18 @@ export const translations = {
       registerButton: "Registrarse"
     },
     map: {
-      addBandButton: "Agregar Banda"
+      addBandButton: "Agregar Banda",
+      cancelButton: "Cancelar",
+      confirmLocation: {
+        title: "¿Agregar banda aquí?",
+        detectedLocation: "Ubicación detectada",
+        coordinates: "Coordenadas",
+        unknown: "Desconocido",
+        noName: "Sin nombre",
+        instruction: "Confirma esta ubicación para abrir el buscador de Spotify y agregar una banda en este punto del mapa.",
+        cancel: "Cancelar",
+        confirm: "Confirmar ubicación"
+      }
     },
     bandForm: {
       addTitle: "Agregar Banda Local",
@@ -45,18 +56,38 @@ export const translations = {
       latitude: "Latitud *",
       longitude: "Longitud *",
       searchCoordinates: "Buscar coordenadas",
+      automaticSearch: "Búsqueda automática",
+      selectOnMap: "Seleccionar en el mapa",
+      clickMapHint: "Click en el mapa para elegir ubicación",
       yearFormed: "Año de formación",
       genre: "Género musical",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "Agregar redes sociales (opcional)",
-      socialMediaAdded: "Redes sociales agregadas",
+      tiktok: "TikTok",
+      socialMedia: "Redes Sociales",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "Añadir Redes Sociales",
+      editSocialMedia: "Editar Redes Sociales",
+      socialMediaConfigured: "Redes sociales configuradas",
       isActive: "Banda actualmente activa",
       cancel: "Cancelar",
       updating: "Actualizando...",
       adding: "Agregando...",
       updateButton: "Actualizar Banda",
       addButton: "Agregar Banda",
+      spotifySearch: {
+        title: "Buscar en Spotify",
+        searchByName: "Buscar por nombre",
+        pasteUrl: "Pegar URL de Spotify",
+        placeholder: "Buscar banda en Spotify...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "Buscar",
+        searching: "Buscando...",
+        noResults: "No se encontraron resultados",
+        selectArtist: "Seleccionar",
+        minCharsError: "Escribe al menos 2 caracteres",
+        urlError: "Pega la URL de Spotify del artista"
+      },
       socialMediaModal: {
         title: "Agregar redes sociales",
         description: "Ayuda a otros a encontrar a esta banda en sus redes sociales. Este paso es completamente opcional.",
@@ -71,6 +102,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "Verificado",
+      active: "Activa",
+      inactive: "Inactiva",
       loading: "Cargando...",
       noTracks: "No hay canciones disponibles",
       noTracksAvailable: "No hay previews disponibles en Deezer",
@@ -174,7 +207,18 @@ export const translations = {
       registerButton: "Sign up"
     },
     map: {
-      addBandButton: "Add Band"
+      addBandButton: "Add Band",
+      cancelButton: "Cancel",
+      confirmLocation: {
+        title: "Add band here?",
+        detectedLocation: "Detected location",
+        coordinates: "Coordinates",
+        unknown: "Unknown",
+        noName: "No name",
+        instruction: "Confirm this location to open the Spotify search and add a band at this point on the map.",
+        cancel: "Cancel",
+        confirm: "Confirm location"
+      }
     },
     bandForm: {
       addTitle: "Add Local Band",
@@ -185,18 +229,38 @@ export const translations = {
       latitude: "Latitude *",
       longitude: "Longitude *",
       searchCoordinates: "Search coordinates",
+      automaticSearch: "Automatic search",
+      selectOnMap: "Select on map",
+      clickMapHint: "Click on map to choose location",
       yearFormed: "Year formed",
       genre: "Musical genre",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "Add social media (optional)",
-      socialMediaAdded: "Social media added",
+      tiktok: "TikTok",
+      socialMedia: "Social Media",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "Add Social Media",
+      editSocialMedia: "Edit Social Media",
+      socialMediaConfigured: "Social media configured",
       isActive: "Band currently active",
       cancel: "Cancel",
       updating: "Updating...",
       adding: "Adding...",
       updateButton: "Update Band",
       addButton: "Add Band",
+      spotifySearch: {
+        title: "Search on Spotify",
+        searchByName: "Search by name",
+        pasteUrl: "Paste Spotify URL",
+        placeholder: "Search band on Spotify...",
+        urlPlaceholder: "https://open.spotify.com/artist/...",
+        searchButton: "Search",
+        searching: "Searching...",
+        noResults: "No results found",
+        selectArtist: "Select",
+        minCharsError: "Type at least 2 characters",
+        urlError: "Paste the Spotify URL of the artist"
+      },
       socialMediaModal: {
         title: "Add social media",
         description: "Help others find this band on social media. This step is completely optional.",
@@ -211,6 +275,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "Verified",
+      active: "Active",
+      inactive: "Inactive",
       loading: "Loading...",
       noTracks: "No tracks available",
       noTracksAvailable: "No previews available on Deezer",
@@ -314,7 +380,18 @@ export const translations = {
       registerButton: "S'inscrire"
     },
     map: {
-      addBandButton: "Ajouter un Groupe"
+      addBandButton: "Ajouter un Groupe",
+      cancelButton: "Annuler",
+      confirmLocation: {
+        title: "Ajouter un groupe ici?",
+        detectedLocation: "Emplacement détecté",
+        coordinates: "Coordonnées",
+        unknown: "Inconnu",
+        noName: "Sans nom",
+        instruction: "Confirmez cet emplacement pour ouvrir la recherche Spotify et ajouter un groupe à ce point de la carte.",
+        cancel: "Annuler",
+        confirm: "Confirmer l'emplacement"
+      }
     },
     bandForm: {
       addTitle: "Ajouter un Groupe Local",
@@ -325,12 +402,19 @@ export const translations = {
       latitude: "Latitude *",
       longitude: "Longitude *",
       searchCoordinates: "Rechercher les coordonnées",
+      automaticSearch: "Recherche automatique",
+      selectOnMap: "Sélectionner sur la carte",
+      clickMapHint: "Cliquez sur la carte pour choisir l'emplacement",
       yearFormed: "Année de formation",
       genre: "Genre musical",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "Ajouter les réseaux sociaux (optionnel)",
-      socialMediaAdded: "Réseaux sociaux ajoutés",
+      tiktok: "TikTok",
+      socialMedia: "Réseaux Sociaux",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "Ajouter les Réseaux Sociaux",
+      editSocialMedia: "Modifier les Réseaux Sociaux",
+      socialMediaConfigured: "Réseaux sociaux configurés",
       isActive: "Groupe actuellement actif",
       cancel: "Annuler",
       updating: "Mise à jour...",
@@ -351,6 +435,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "Vérifié",
+      active: "Active",
+      inactive: "Inactive",
       loading: "Chargement...",
       noTracks: "Aucune chanson disponible",
       noTracksAvailable: "Aucun aperçu disponible sur Deezer",
@@ -367,6 +453,26 @@ export const translations = {
       message: "Êtes-vous sûr de vouloir supprimer ce groupe? Cette action ne peut pas être annulée.",
       confirm: "Supprimer",
       cancel: "Annuler"
+    },
+    kofiGoals: {
+      title: "Objectifs du Projet",
+      collapseHint: "Cliquez pour réduire",
+      goal1: {
+        name: "Hébergement & Domaine",
+        amount: "10",
+        description: "Serveur et domaine personnalisé pour LocalNoise"
+      },
+      goal2: {
+        name: "Base de Données",
+        amount: "25",
+        description: "Plan premium pour faire évoluer la base de données"
+      },
+      goal3: {
+        name: "Nouvelles Fonctionnalités",
+        amount: "50",
+        description: "Développement de nouvelles fonctionnalités"
+      },
+      supportButton: "Soutenir LocalNoise"
     },
     onboarding: {
       skip: "Passer",
@@ -434,7 +540,18 @@ export const translations = {
       registerButton: "Registrati"
     },
     map: {
-      addBandButton: "Aggiungi Band"
+      addBandButton: "Aggiungi Band",
+      cancelButton: "Annulla",
+      confirmLocation: {
+        title: "Aggiungere band qui?",
+        detectedLocation: "Posizione rilevata",
+        coordinates: "Coordinate",
+        unknown: "Sconosciuto",
+        noName: "Nessun nome",
+        instruction: "Conferma questa posizione per aprire la ricerca Spotify e aggiungere una band in questo punto della mappa.",
+        cancel: "Annulla",
+        confirm: "Conferma posizione"
+      }
     },
     bandForm: {
       addTitle: "Aggiungi Band Locale",
@@ -445,12 +562,19 @@ export const translations = {
       latitude: "Latitudine *",
       longitude: "Longitudine *",
       searchCoordinates: "Cerca coordinate",
+      automaticSearch: "Ricerca automatica",
+      selectOnMap: "Seleziona sulla mappa",
+      clickMapHint: "Clicca sulla mappa per scegliere la posizione",
       yearFormed: "Anno di formazione",
       genre: "Genere musicale",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "Aggiungi social media (opzionale)",
-      socialMediaAdded: "Social media aggiunti",
+      tiktok: "TikTok",
+      socialMedia: "Social Media",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "Aggiungi Social Media",
+      editSocialMedia: "Modifica Social Media",
+      socialMediaConfigured: "Social media configurati",
       isActive: "Band attualmente attiva",
       cancel: "Annulla",
       updating: "Aggiornamento...",
@@ -471,6 +595,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "Verificato",
+      active: "Attiva",
+      inactive: "Inattiva",
       loading: "Caricamento...",
       noTracks: "Nessuna canzone disponibile",
       noTracksAvailable: "Nessuna anteprima disponibile su Deezer",
@@ -487,6 +613,26 @@ export const translations = {
       message: "Sei sicuro di voler eliminare questa band? Questa azione non può essere annullata.",
       confirm: "Elimina",
       cancel: "Annulla"
+    },
+    kofiGoals: {
+      title: "Obiettivi del Progetto",
+      collapseHint: "Clicca per ridurre",
+      goal1: {
+        name: "Hosting & Dominio",
+        amount: "10",
+        description: "Server e dominio personalizzato per LocalNoise"
+      },
+      goal2: {
+        name: "Database",
+        amount: "25",
+        description: "Piano premium per scalare il database"
+      },
+      goal3: {
+        name: "Nuove Funzionalità",
+        amount: "50",
+        description: "Sviluppo di nuove funzionalità"
+      },
+      supportButton: "Supporta LocalNoise"
     },
     onboarding: {
       skip: "Salta",
@@ -554,7 +700,18 @@ export const translations = {
       registerButton: "登録"
     },
     map: {
-      addBandButton: "バンドを追加"
+      addBandButton: "バンドを追加",
+      cancelButton: "キャンセル",
+      confirmLocation: {
+        title: "ここにバンドを追加しますか？",
+        detectedLocation: "検出された場所",
+        coordinates: "座標",
+        unknown: "不明",
+        noName: "名前なし",
+        instruction: "この場所を確認してSpotify検索を開き、地図上のこの地点にバンドを追加します。",
+        cancel: "キャンセル",
+        confirm: "場所を確認"
+      }
     },
     bandForm: {
       addTitle: "ローカルバンドを追加",
@@ -565,12 +722,19 @@ export const translations = {
       latitude: "緯度 *",
       longitude: "経度 *",
       searchCoordinates: "座標を検索",
+      automaticSearch: "自動検索",
+      selectOnMap: "地図上で選択",
+      clickMapHint: "地図をクリックして場所を選択",
       yearFormed: "結成年",
       genre: "音楽ジャンル",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "ソーシャルメディアを追加（任意）",
-      socialMediaAdded: "ソーシャルメディアが追加されました",
+      tiktok: "TikTok",
+      socialMedia: "ソーシャルメディア",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "ソーシャルメディアを追加",
+      editSocialMedia: "ソーシャルメディアを編集",
+      socialMediaConfigured: "ソーシャルメディア設定済み",
       isActive: "現在活動中のバンド",
       cancel: "キャンセル",
       updating: "更新中...",
@@ -591,6 +755,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "認証済み",
+      active: "活動中",
+      inactive: "非活動",
       loading: "読み込み中...",
       noTracks: "利用可能な曲がありません",
       noTracksAvailable: "Deezerでプレビューが利用できません",
@@ -607,6 +773,26 @@ export const translations = {
       message: "このバンドを削除してもよろしいですか？この操作は元に戻せません。",
       confirm: "削除",
       cancel: "キャンセル"
+    },
+    kofiGoals: {
+      title: "プロジェクト目標",
+      collapseHint: "クリックして折りたたむ",
+      goal1: {
+        name: "ホスティング & ドメイン",
+        amount: "10",
+        description: "LocalNoise用のサーバーとカスタムドメイン"
+      },
+      goal2: {
+        name: "データベース",
+        amount: "25",
+        description: "データベースをスケールするためのプレミアムプラン"
+      },
+      goal3: {
+        name: "新機能",
+        amount: "50",
+        description: "新しい機能の開発"
+      },
+      supportButton: "LocalNoiseをサポート"
     },
     onboarding: {
       skip: "スキップ",
@@ -674,7 +860,18 @@ export const translations = {
       registerButton: "회원가입"
     },
     map: {
-      addBandButton: "밴드 추가"
+      addBandButton: "밴드 추가",
+      cancelButton: "취소",
+      confirmLocation: {
+        title: "여기에 밴드를 추가하시겠습니까?",
+        detectedLocation: "감지된 위치",
+        coordinates: "좌표",
+        unknown: "알 수 없음",
+        noName: "이름 없음",
+        instruction: "이 위치를 확인하여 Spotify 검색을 열고 지도의 이 지점에 밴드를 추가합니다.",
+        cancel: "취소",
+        confirm: "위치 확인"
+      }
     },
     bandForm: {
       addTitle: "로컬 밴드 추가",
@@ -685,12 +882,19 @@ export const translations = {
       latitude: "위도 *",
       longitude: "경도 *",
       searchCoordinates: "좌표 검색",
+      automaticSearch: "자동 검색",
+      selectOnMap: "지도에서 선택",
+      clickMapHint: "지도를 클릭하여 위치 선택",
       yearFormed: "결성 연도",
       genre: "음악 장르",
       instagram: "Instagram",
       twitter: "X / Twitter",
-      addSocialMedia: "소셜 미디어 추가 (선택사항)",
-      socialMediaAdded: "소셜 미디어가 추가되었습니다",
+      tiktok: "TikTok",
+      socialMedia: "소셜 미디어",
+      socialMediaSubtitle: "Instagram, X/Twitter, TikTok",
+      addSocialMedia: "소셜 미디어 추가",
+      editSocialMedia: "소셜 미디어 편집",
+      socialMediaConfigured: "소셜 미디어 설정됨",
       isActive: "현재 활동 중인 밴드",
       cancel: "취소",
       updating: "업데이트 중...",
@@ -711,6 +915,8 @@ export const translations = {
     },
     bandPopup: {
       verified: "인증됨",
+      active: "활동 중",
+      inactive: "비활동",
       loading: "로딩 중...",
       noTracks: "사용 가능한 곡이 없습니다",
       noTracksAvailable: "Deezer에서 미리듣기를 사용할 수 없습니다",
@@ -727,6 +933,26 @@ export const translations = {
       message: "이 밴드를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
       confirm: "삭제",
       cancel: "취소"
+    },
+    kofiGoals: {
+      title: "프로젝트 목표",
+      collapseHint: "클릭하여 접기",
+      goal1: {
+        name: "호스팅 & 도메인",
+        amount: "10",
+        description: "LocalNoise를 위한 서버와 사용자 정의 도메인"
+      },
+      goal2: {
+        name: "데이터베이스",
+        amount: "25",
+        description: "데이터베이스 확장을 위한 프리미엄 플랜"
+      },
+      goal3: {
+        name: "새로운 기능",
+        amount: "50",
+        description: "새로운 기능 개발"
+      },
+      supportButton: "LocalNoise 지원하기"
     },
     onboarding: {
       skip: "건너뛰기",

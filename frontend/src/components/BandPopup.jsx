@@ -113,6 +113,9 @@ function BandPopup({ band, user, onEdit, onDelete, translations }) {
             <span className="location">{band.city}, {band.country}</span>
             {band.genre && <span className="genre">{band.genre}</span>}
             {band.isVerified && <span className="verified">{translations.verified}</span>}
+            <span className={`status-badge ${band.isActive ? 'active' : 'inactive'}`}>
+              {band.isActive ? translations.active : translations.inactive}
+            </span>
           </div>
         </div>
       </div>

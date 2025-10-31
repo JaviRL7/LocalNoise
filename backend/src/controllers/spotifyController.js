@@ -80,3 +80,30 @@ exports.getArtist = async (req, res) => {
     });
   }
 };
+
+/**
+ * Obtener información de un artista por URL de Spotify
+ */
+exports.getArtistByUrl = async (req, res) => {
+  try {
+    const { url } = req.query;
+
+    if (!url) {
+      return res.status(400).json({
+        error: 'Se requiere la URL de Spotify'
+      });
+    }
+
+    const artist = await spotifyService.getArtistByUrl(url);
+
+    res.json({
+      artist: artist,
+      source: 'url'
+    });
+  } catch (error) {
+    console.error('Error en getArtistByUrl:', error);
+    res.status(400).json({
+      error: error.message || 'Error al obtener artista por URL'
+    });
+  }
+};
