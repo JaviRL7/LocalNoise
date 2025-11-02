@@ -33,6 +33,10 @@ function App() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showDeveloperModal, setShowDeveloperModal] = useState(false);
   const [showMobileInfoPanel, setShowMobileInfoPanel] = useState(false);
+  const [showMyBandsModal, setShowMyBandsModal] = useState(false);
+  const [currentBandPage, setCurrentBandPage] = useState(0);
+  const BANDS_PER_PAGE = 3; // 3 bandas por página para menú compacto
+  const BANDS_PER_PAGE_MODAL = 5; // 5 bandas por página en modal móvil
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -45,6 +49,27 @@ function App() {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [showMobileMenu]);
+
+  // Close My Bands Modal with ESC key and prevent body scroll
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showMyBandsModal) {
+        setShowMyBandsModal(false);
+      }
+    };
+
+    if (showMyBandsModal) {
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleEscape);
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [showMyBandsModal]);
 
   // Cargar bandas al iniciar
   useEffect(() => {
@@ -151,12 +176,25 @@ function App() {
   };
 
   const toggleUserMenu = async () => {
-    if (!showUserMenu && user) {
+    // Detectar si estamos en móvil
+    const isMobile = window.innerWidth <= 768;
+
+    if (user) {
       // Load user's bands when opening menu
       const userBandsData = bands.filter(b => b.addedBy === user.id);
       setUserBands(userBandsData);
+      setCurrentBandPage(0); // Reset to first page
+
+      if (isMobile) {
+        // En móvil, abrir modal en lugar de dropdown
+        setShowMyBandsModal(true);
+        setShowUserMenu(false);
+      } else {
+        // En desktop, usar dropdown normal
+        setShowUserMenu(!showUserMenu);
+        setShowMyBandsModal(false);
+      }
     }
-    setShowUserMenu(!showUserMenu);
   };
 
   const handleBandAdded = (newBand) => {
@@ -337,6 +375,11 @@ function App() {
           )}
 
           <div className={`header-actions ${showMobileMenu ? 'mobile-open' : ''}`}>
+            {/* Logo en el menú móvil */}
+            <div className="mobile-menu-logo">
+              <img src="/logo.png" alt="LocalNoise" />
+            </div>
+
             <button
               onClick={() => { setShowOnboarding(true); setShowMobileMenu(false); }}
               className="info-button"
@@ -390,30 +433,28 @@ function App() {
               )}
             </div>
 
-            {/* Grupo de botones de acción */}
-            <div className="mobile-action-buttons">
-              <a
-                href="https://ko-fi.com/javi_r0dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="kofi-button-header"
-                title="Support LocalNoise"
-                onClick={() => setShowMobileMenu(false)}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
-                </svg>
-                Ko-fi
-              </a>
-              <button
-                onClick={() => { setDarkMode(!darkMode); setShowMobileMenu(false); }}
-                className="theme-toggle"
-                title={darkMode ? t.header.lightMode : t.header.darkMode}
-              >
-                {darkMode ? 'Light' : 'Dark'}
-              </button>
-              {user ? (
-                <>
+            <button
+              onClick={() => { setDarkMode(!darkMode); setShowMobileMenu(false); }}
+              className="theme-toggle"
+              title={darkMode ? t.header.lightMode : t.header.darkMode}
+            >
+              {darkMode ? 'Light' : 'Dark'}
+            </button>
+            <a
+              href="https://ko-fi.com/javi_r0dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="kofi-button-header"
+              title="Support LocalNoise"
+              onClick={() => setShowMobileMenu(false)}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916zm-11.062 3.511c-1.246 1.453-4.011 3.976-4.011 3.976s-.121.119-.31.023c-.076-.057-.108-.09-.108-.09-.443-.441-3.368-3.049-4.034-3.954-.709-.965-1.041-2.7-.091-3.71.951-1.01 3.005-1.086 4.363.407 0 0 1.565-1.782 3.468-.963 1.904.82 1.832 3.011.723 4.311zm6.173.478c-.928.116-1.682.028-1.682.028V7.284h1.77s1.971.551 1.971 2.638c0 1.913-.985 2.667-2.059 3.015z"/>
+              </svg>
+              Ko-fi
+            </a>
+            {user ? (
+                <div className="user-menu-container">
                   <button onClick={toggleUserMenu} className="user-info-button">
                     {user.profilePhoto ? (
                       <img
@@ -446,31 +487,81 @@ function App() {
                   {userBands.length === 0 ? (
                     <p className="no-bands-message">{t.header.noBands}</p>
                   ) : (
-                    userBands.map(band => (
-                      <div key={band.id} className="user-band-item">
-                        <div className="user-band-info">
-                          {band.spotifyImageUrl && (
-                            <img src={band.spotifyImageUrl} alt={band.name} className="band-thumb" />
-                          )}
-                          <div className="band-details">
-                            <h4>{band.name}</h4>
-                            <p>{band.city}, {band.country}</p>
-                          </div>
-                        </div>
-                        <div className="band-actions-menu">
-                          <button onClick={() => { handleEditBand(band); setShowUserMenu(false); setShowMobileMenu(false); }} className="band-action-btn edit">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                            </svg>
-                          </button>
-                          <button onClick={() => { handleDeleteBand(band.id); setShowUserMenu(false); setShowMobileMenu(false); }} className="band-action-btn delete">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                            </svg>
-                          </button>
+                    <>
+                      <div className="bands-carousel">
+                        <div className="bands-carousel-items">
+                          {userBands
+                            .slice(currentBandPage * BANDS_PER_PAGE, (currentBandPage + 1) * BANDS_PER_PAGE)
+                            .map(band => (
+                              <div key={band.id} className="user-band-item">
+                                <div className="user-band-info">
+                                  {band.spotifyImageUrl && (
+                                    <img src={band.spotifyImageUrl} alt={band.name} className="band-thumb" />
+                                  )}
+                                  <div className="band-details">
+                                    <h4>{band.name}</h4>
+                                    <p>{band.city}, {band.country}</p>
+                                  </div>
+                                </div>
+                                <div className="band-actions-menu">
+                                  <button 
+                                    onClick={() => { handleEditBand(band); setShowUserMenu(false); setShowMobileMenu(false); }} 
+                                    className="band-action-btn edit"
+                                  >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                    </svg>
+                                    Editar
+                                  </button>
+                                  <button 
+                                    onClick={() => { handleDeleteBand(band.id); setShowUserMenu(false); setShowMobileMenu(false); }} 
+                                    className="band-action-btn delete"
+                                  >
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                    </svg>
+                                    Borrar
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
                         </div>
                       </div>
-                    ))
+                      {userBands.length > BANDS_PER_PAGE && (
+                        <div className="carousel-controls">
+                          <button 
+                            onClick={() => setCurrentBandPage(prev => Math.max(0, prev - 1))}
+                            disabled={currentBandPage === 0}
+                            className="carousel-nav-btn"
+                            aria-label="Anterior"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                          </button>
+                          <div className="carousel-dots">
+                            {Array.from({ length: Math.ceil(userBands.length / BANDS_PER_PAGE) }).map((_, index) => (
+                              <button
+                                key={index}
+                                onClick={() => setCurrentBandPage(index)}
+                                className={`carousel-dot ${currentBandPage === index ? 'active' : ''}`}
+                                aria-label={`Página ${index + 1}`}
+                              />
+                            ))}
+                          </div>
+                          <button 
+                            onClick={() => setCurrentBandPage(prev => Math.min(Math.ceil(userBands.length / BANDS_PER_PAGE) - 1, prev + 1))}
+                            disabled={currentBandPage >= Math.ceil(userBands.length / BANDS_PER_PAGE) - 1}
+                            className="carousel-nav-btn"
+                            aria-label="Siguiente"
+                          >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 <div className="user-menu-footer">
@@ -483,13 +574,12 @@ function App() {
                 </div>
               </div>
                     )}
-                  </>
+                  </div>
               ) : (
                 <button onClick={() => { setError(''); setShowAuth(true); setAuthMode('login'); setShowMobileMenu(false); }} className="login-button">
                   {t.header.login}
                 </button>
               )}
-            </div>
           </div>
         </div>
       </header>
@@ -880,10 +970,132 @@ function App() {
         </div>
       </footer>
 
+      {/* My Bands Modal (Mobile) */}
+      {showMyBandsModal && (
+        <div className="my-bands-modal-overlay" onClick={() => setShowMyBandsModal(false)}>
+          <div className="my-bands-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="my-bands-modal-header">
+              <h2>{t.header.myBands} ({userBands.length})</h2>
+              <button onClick={() => setShowMyBandsModal(false)} className="modal-close-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div className="my-bands-modal-content">
+              {userBands.length === 0 ? (
+                <p className="no-bands-message">{t.header.noBands}</p>
+              ) : (
+                <>
+                  <div className="modal-bands-list">
+                    {userBands
+                      .slice(currentBandPage * BANDS_PER_PAGE_MODAL, (currentBandPage + 1) * BANDS_PER_PAGE_MODAL)
+                      .map(band => (
+                        <div key={band.id} className="modal-band-item">
+                          <div className="modal-band-info">
+                            {band.spotifyImageUrl && (
+                              <img src={band.spotifyImageUrl} alt={band.name} className="modal-band-thumb" />
+                            )}
+                            <div className="modal-band-details">
+                              <h4>{band.name}</h4>
+                              <p>{band.city}, {band.country}</p>
+                            </div>
+                          </div>
+                          <div className="modal-band-actions">
+                            <button
+                              onClick={() => {
+                                handleEditBand(band);
+                                setShowMyBandsModal(false);
+                                setShowMobileMenu(false);
+                              }}
+                              className="modal-action-btn edit"
+                            >
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                              </svg>
+                              <span>{t.bandPopup.edit}</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                handleDeleteBand(band.id);
+                                setShowMyBandsModal(false);
+                                setShowMobileMenu(false);
+                              }}
+                              className="modal-action-btn delete"
+                            >
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                              </svg>
+                              <span>{t.bandPopup.delete}</span>
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+
+                  {userBands.length > BANDS_PER_PAGE_MODAL && (
+                    <div className="modal-carousel-controls">
+                      <button
+                        onClick={() => setCurrentBandPage(prev => Math.max(0, prev - 1))}
+                        disabled={currentBandPage === 0}
+                        className="modal-carousel-nav-btn"
+                        aria-label="Anterior"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                      </button>
+                      <div className="modal-carousel-dots">
+                        {Array.from({ length: Math.ceil(userBands.length / BANDS_PER_PAGE_MODAL) }).map((_, index) => (
+                          <button
+                            key={index}
+                            onClick={() => setCurrentBandPage(index)}
+                            className={`modal-carousel-dot ${currentBandPage === index ? 'active' : ''}`}
+                            aria-label={`Página ${index + 1}`}
+                          />
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => setCurrentBandPage(prev => Math.min(Math.ceil(userBands.length / BANDS_PER_PAGE_MODAL) - 1, prev + 1))}
+                        disabled={currentBandPage >= Math.ceil(userBands.length / BANDS_PER_PAGE_MODAL) - 1}
+                        className="modal-carousel-nav-btn"
+                        aria-label="Siguiente"
+                      >
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="my-bands-modal-footer">
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setShowMyBandsModal(false);
+                  setShowMobileMenu(false);
+                }}
+                className="modal-logout-btn"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+                {t.header.logout}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Developer Modal */}
-      <DeveloperModal 
-        isOpen={showDeveloperModal} 
-        onClose={() => setShowDeveloperModal(false)} 
+      <DeveloperModal
+        isOpen={showDeveloperModal}
+        onClose={() => setShowDeveloperModal(false)}
       />
     </div>
   );

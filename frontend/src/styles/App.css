@@ -4,6 +4,194 @@
   box-sizing: border-box;
 }
 
+/* ===========================
+   CSS Variables System
+   =========================== */
+:root {
+  /* Colors */
+  --color-bg-primary: #121212;
+  --color-bg-secondary: #181818;
+  --color-bg-tertiary: #282828;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #b3b3b3;
+  --color-accent-primary: #1DB954;
+  --color-accent-hover: #1ed760;
+  --color-danger: #e22134;
+  --color-warning: #FF5E5B;
+
+  /* Borders */
+  --border-color-primary: #282828;
+  --border-color-secondary: #404040;
+  --border-color-tertiary: #535353;
+
+  /* Z-index Scale */
+  --z-base: 1;
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-overlay: 300;
+  --z-mobile-menu: 350;
+  --z-mobile-menu-button: 360;
+  --z-modal: 400;
+  --z-popup: 500;
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-xl: 1.5rem;
+  --spacing-2xl: 2rem;
+  --spacing-3xl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 50%;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* ===========================
+   Utility Classes
+   =========================== */
+
+/* Scrollbar Spotify Style */
+.scrollbar-spotify {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-tertiary) var(--color-bg-primary);
+}
+
+.scrollbar-spotify::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+.scrollbar-spotify::-webkit-scrollbar-track {
+  background: var(--color-bg-primary);
+}
+
+.scrollbar-spotify::-webkit-scrollbar-thumb {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.scrollbar-spotify::-webkit-scrollbar-thumb:hover {
+  background: #3e3e3e;
+}
+
+/* Overlay Dark */
+.overlay-dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  z-index: var(--z-overlay);
+}
+
+@supports not (backdrop-filter: blur(0.5rem)) {
+  .overlay-dark {
+    background: rgba(0, 0, 0, 0.95);
+  }
+}
+
+/* Hover Scale Effects */
+.hover-scale-sm {
+  transition: transform var(--transition-base);
+}
+
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+}
+
+.hover-scale-md {
+  transition: transform var(--transition-base);
+}
+
+.hover-scale-md:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale-lg {
+  transition: transform var(--transition-base);
+}
+
+.hover-scale-lg:hover {
+  transform: scale(1.08);
+}
+
+/* Spotify-Style Buttons */
+.btn-spotify {
+  padding: var(--spacing-md) var(--spacing-xl);
+  border: none;
+  border-radius: var(--radius-2xl);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  font-family: inherit;
+}
+
+.btn-spotify:hover {
+  transform: scale(1.02);
+}
+
+.btn-spotify-primary {
+  background: linear-gradient(135deg, var(--color-accent-primary) 0%, var(--color-accent-hover) 100%);
+  color: var(--color-text-primary);
+  box-shadow: 0 0.25rem 0.75rem rgba(29, 185, 84, 0.3);
+}
+
+.btn-spotify-primary:hover {
+  box-shadow: 0 0.5rem 1.5rem rgba(29, 185, 84, 0.4);
+}
+
+.btn-spotify-secondary {
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 0.0625rem solid var(--border-color-tertiary);
+}
+
+.btn-spotify-secondary:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border-color: var(--color-text-secondary);
+}
+
+.btn-spotify-danger {
+  background: var(--color-danger);
+  color: var(--color-text-primary);
+  box-shadow: 0 0.25rem 0.75rem rgba(226, 33, 52, 0.3);
+}
+
+.btn-spotify-danger:hover {
+  background: #ff2640;
+  box-shadow: 0 0.5rem 1.5rem rgba(226, 33, 52, 0.4);
+}
+
+/* Border Utilities */
+.border-top-primary {
+  border-top: 0.0625rem solid var(--border-color-primary);
+}
+
+.border-bottom-primary {
+  border-bottom: 0.0625rem solid var(--border-color-primary);
+}
+
+.border-primary {
+  border: 0.0625rem solid var(--border-color-primary);
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -21,18 +209,18 @@ body {
 
 /* Spotify-style Header */
 .app-header {
-  background: #121212;
-  color: white;
-  padding: 10px 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  z-index: 10000;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: 0.625rem 2rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3);
+  z-index: var(--z-header);
   position: relative;
-  border-bottom: 1px solid #282828;
+  border-bottom: 0.0625rem solid var(--border-color-primary);
   font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .header-content {
-  max-width: 1400px;
+  max-width: 87.5rem;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -48,7 +236,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
 .logo-image {
@@ -89,6 +277,11 @@ body {
   align-items: center;
 }
 
+/* Logo del menú móvil - oculto por defecto */
+.mobile-menu-logo {
+  display: none;
+}
+
 /* Mobile menu overlay */
 .mobile-menu-overlay {
   display: none;
@@ -105,7 +298,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10001;
+    z-index: var(--z-mobile-menu-button);
   }
 
   .mobile-menu-overlay {
@@ -116,7 +309,7 @@ body {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.6);
-    z-index: 9999;
+    z-index: var(--z-overlay);
     animation: fadeIn 0.3s ease;
   }
 
@@ -124,18 +317,19 @@ body {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 280px;
-    height: 100vh;
-    background: #121212;
-    border-left: 1px solid #282828;
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    padding: 80px 20px 24px 20px;
+    align-items: stretch;
+    width: 17.5rem;
+    height: 100vh;
+    gap: 0.75rem;
+    padding: 5rem 1.25rem 1.5rem 1.25rem;
+    background-color: #121212;
+    border-left: 0.0625rem solid #282828;
+    box-shadow: -0.25rem 0 1.5rem rgba(0, 0, 0, 0.8);
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
+    z-index: var(--z-mobile-menu);
     overflow-y: auto;
-    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.6);
   }
 
   .header-actions.mobile-open {
@@ -144,28 +338,56 @@ body {
 
   /* Info button - circular */
   .info-button {
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
     border-radius: 50%;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: center;
   }
 
   /* Language button - circular */
   .language-menu-container {
     width: auto;
+    align-self: center;
   }
 
   .language-toggle {
-    width: 50px;
-    height: 50px;
+    width: 3.125rem;
+    height: 3.125rem;
     border-radius: 50%;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Separador visual */
+  .header-actions > .kofi-button-header {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #282828;
+    width: 100%;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .header-actions > .theme-toggle {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    justify-content: center;
+  }
+
+  .header-actions > .login-button,
+  .header-actions > .user-info-button {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
   }
 
   .language-toggle .flag-icon {
@@ -232,16 +454,280 @@ body {
     font-size: 0.9rem;
   }
 
-  /* User dropdown en móvil */
+  /* Logo en el menú lateral móvil */
+  .mobile-menu-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 0 16px;
+    border-bottom: 1px solid #282828;
+    margin-bottom: 8px;
+  }
+
+  .mobile-menu-logo img {
+    height: 32px;
+    width: auto;
+  }
+
+  /* User dropdown adaptado al menú lateral - SIN PADDING LATERAL */
+  .user-menu-container {
+    width: 100%;
+  }
+
+  .user-info-button {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+  }
+
   .user-dropdown-menu {
     position: static;
     width: 100%;
-    margin-top: 8px;
-    min-width: 100%;
+    margin-top: 6px;
+    min-width: auto;
     max-width: 100%;
+    border-radius: 0;
+    border: none;
+    border-top: 1px solid #282828;
+    border-bottom: 1px solid #282828;
+    z-index: auto;
+    max-height: none;
     box-shadow: none;
-    border: 1px solid #282828;
-    border-radius: 8px;
+    background: transparent;
+    padding: 0;
+  }
+
+  .user-menu-header {
+    padding: 8px 0 4px;
+    background: transparent;
+    border-bottom: none;
+  }
+
+  .user-menu-header h3 {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #808080;
+    font-weight: 600;
+    padding-left: 8px;
+  }
+
+  /* Carousel de bandas - SIN PADDING, SIN BORDES, SIN CARDS */
+  .user-bands-list {
+    max-height: none;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .bands-carousel {
+    position: relative;
+    padding: 0;
+  }
+
+  .bands-carousel-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Item de banda - PLANO, SIN CARD, SIN BORDES */
+  .user-band-item {
+    display: flex;
+    flex-direction: column;
+    padding: 8px 8px;
+    margin-bottom: 0;
+    background: transparent;
+    border-radius: 0;
+    gap: 6px;
+    border-bottom: 1px solid rgba(40, 40, 40, 0.5);
+  }
+
+  .user-band-item:hover {
+    background: rgba(40, 40, 40, 0.3);
+  }
+
+  .user-band-item:last-child {
+    border-bottom: none;
+  }
+
+  .user-band-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .band-thumb {
+    width: 32px;
+    height: 32px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .band-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .band-details h4 {
+    font-size: 0.75rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .band-details p {
+    font-size: 0.65rem;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #808080;
+  }
+
+  /* Botones de acción - SIN BORDES, PLANOS */
+  .band-actions-menu {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    padding-left: 8px;
+  }
+
+  .band-action-btn {
+    flex: 1;
+    padding: 6px 4px;
+    width: auto;
+    min-width: 0;
+    height: auto;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-size: 0.6rem;
+    color: #b3b3b3;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .band-action-btn svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+
+  .band-action-btn.edit:hover {
+    color: #1DB954;
+    background: rgba(29, 185, 84, 0.1);
+  }
+
+  .band-action-btn.delete:hover {
+    color: #e22134;
+    background: rgba(226, 33, 52, 0.1);
+  }
+
+  /* Controles de paginación - CENTRADO, MINI */
+  .carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0 6px;
+    gap: 10px;
+  }
+
+  .carousel-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .carousel-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #404040;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .carousel-dot.active {
+    background: #1DB954;
+    width: 14px;
+    border-radius: 2px;
+  }
+
+  .carousel-nav-btn {
+    background: transparent;
+    border: none;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #b3b3b3;
+    transition: all 0.2s;
+    padding: 0;
+  }
+
+  .carousel-nav-btn:hover:not(:disabled) {
+    color: #1DB954;
+  }
+
+  .carousel-nav-btn:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+
+  .carousel-nav-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* Footer MINI - SIN BORDES */
+  .user-menu-footer {
+    padding: 6px 8px 8px;
+    background: transparent;
+    border-top: none;
+  }
+
+  .logout-menu-button {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border-radius: 4px;
+    background: transparent;
+    border: none;
+  }
+
+  .logout-menu-button:hover {
+    color: #e22134;
+    background: rgba(226, 33, 52, 0.1);
+  }
+
+  .logout-menu-button svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  /* Mensaje sin bandas */
+  .no-bands-message {
+    text-align: center;
+    padding: 12px 8px;
+    color: #808080;
+    font-size: 0.65rem;
   }
 
   /* Scrollbar para el menú móvil */
@@ -356,7 +842,7 @@ body {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
   min-width: 200px;
   overflow: hidden;
-  z-index: 10001;
+  z-index: var(--z-dropdown);
   animation: slideDown 0.2s ease;
   backdrop-filter: blur(10px);
 }
@@ -499,7 +985,7 @@ body {
   min-width: 350px;
   max-width: 400px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-  z-index: 10001;
+  z-index: var(--z-dropdown);
   max-height: 500px;
   display: flex;
   flex-direction: column;
@@ -612,6 +1098,92 @@ body {
   color: #e22134;
 }
 
+/* Bands carousel for desktop dropdown */
+.bands-carousel {
+  position: relative;
+  width: 100%;
+}
+
+.bands-carousel-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Carousel controls for desktop dropdown */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 0 8px;
+  gap: 12px;
+  border-top: 1px solid #282828;
+  margin-top: 8px;
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 200px;
+}
+
+.carousel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #404040;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.carousel-dot:hover {
+  background: #606060;
+}
+
+.carousel-dot.active {
+  background: #1DB954;
+  width: 16px;
+  border-radius: 3px;
+}
+
+.carousel-nav-btn {
+  background: transparent;
+  border: 1px solid #404040;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #b3b3b3;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.carousel-nav-btn:hover:not(:disabled) {
+  background: #282828;
+  border-color: #1DB954;
+  color: #1DB954;
+}
+
+.carousel-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carousel-nav-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
 .user-menu-footer {
   padding: 12px;
   border-top: 1px solid #282828;
@@ -693,6 +1265,7 @@ body {
   flex: 1;
   position: relative;
   overflow: hidden;
+  z-index: var(--z-base);
 }
 
 /* Overlay oscuro para modo agregar banda */
@@ -1274,6 +1847,7 @@ body {
 @media (max-width: 768px) {
   .app-main {
     grid-template-columns: 1fr;
+    max-height: calc(100vh - 65px - 100px);
   }
 
   .info-panel {
@@ -1282,6 +1856,16 @@ body {
 
   .app-header {
     padding: 10px 16px;
+  }
+  
+  /* Hacer que el dropdown del usuario funcione en móvil */
+  .user-menu-container {
+    width: 100%;
+  }
+  
+  .user-info-button {
+    width: 100%;
+    justify-content: center;
   }
 
   .header-content {
@@ -1315,6 +1899,10 @@ body {
 }
 
 @media (max-width: 480px) {
+  .app-main {
+    max-height: calc(100vh - 60px - 110px);
+  }
+
   .app-header {
     padding: 8px 12px;
   }
@@ -1355,7 +1943,7 @@ body {
   border-top: 1px solid #282828;
   padding: 12px 32px;
   position: relative;
-  z-index: 9999;
+  z-index: var(--z-base);
   font-family: 'Circular', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
 }
 
@@ -1770,4 +2358,305 @@ body {
 
 .leaflet-control-attribution a:hover {
   color: #1ed760 !important;
+}
+
+/* ========================================
+   MY BANDS MODAL (MOBILE)
+   ======================================== */
+
+.my-bands-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.my-bands-modal {
+  background: #121212;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+  border: 1px solid #282828;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.my-bands-modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #282828;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.my-bands-modal-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #b3b3b3;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #282828;
+  color: white;
+}
+
+.my-bands-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+}
+
+.modal-bands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-band-item {
+  background: #181818;
+  border-radius: 12px;
+  padding: 16px;
+  transition: background 0.2s;
+  border: 1px solid transparent;
+}
+
+.modal-band-item:hover {
+  background: #282828;
+  border-color: #404040;
+}
+
+.modal-band-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.modal-band-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.modal-band-details h4 {
+  color: white;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.modal-band-details p {
+  color: #b3b3b3;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.modal-band-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-action-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #404040;
+  border-radius: 8px;
+  color: #b3b3b3;
+  cursor: pointer;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.modal-action-btn svg {
+  flex-shrink: 0;
+}
+
+.modal-action-btn.edit:hover {
+  background: rgba(29, 185, 84, 0.1);
+  border-color: #1DB954;
+  color: #1DB954;
+}
+
+.modal-action-btn.delete:hover {
+  background: rgba(226, 33, 52, 0.1);
+  border-color: #e22134;
+  color: #e22134;
+}
+
+.modal-carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #282828;
+}
+
+.modal-carousel-nav-btn {
+  background: transparent;
+  border: 1px solid #404040;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #b3b3b3;
+  transition: all 0.2s;
+}
+
+.modal-carousel-nav-btn:hover:not(:disabled) {
+  background: #282828;
+  border-color: #1DB954;
+  color: #1DB954;
+}
+
+.modal-carousel-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.modal-carousel-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modal-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #404040;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-carousel-dot:hover {
+  background: #606060;
+}
+
+.modal-carousel-dot.active {
+  background: #1DB954;
+  width: 24px;
+  border-radius: 4px;
+}
+
+.my-bands-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #282828;
+}
+
+.modal-logout-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid #535353;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.modal-logout-btn:hover {
+  background: rgba(226, 33, 52, 0.1);
+  border-color: #e22134;
+  color: #e22134;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 480px) {
+  .my-bands-modal-overlay {
+    padding: 0;
+  }
+
+  .my-bands-modal {
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
+  }
+
+  .my-bands-modal-header {
+    padding: 16px 20px;
+  }
+
+  .my-bands-modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .my-bands-modal-content {
+    padding: 12px 20px;
+  }
+
+  .modal-band-item {
+    padding: 12px;
+  }
+
+  .modal-band-thumb {
+    width: 50px;
+    height: 50px;
+  }
 }
